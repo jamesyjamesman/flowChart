@@ -9,9 +9,11 @@ function changeElement(id) {
 
 let buttonIds = [1];
 let headerIds = [1];
+let lockIds = [1];
 let IdNum;
 let buttonNewId;
 let headerNewId;
+let lockNewId;
 let length;
 let divNewId;
 
@@ -20,8 +22,10 @@ function add() {
   IdNum = buttonIds[length] + 1;
   buttonIds.push(IdNum);
   headerIds.push(IdNum);
+  lockIds.push(IdNum);
   buttonNewId = "button" + IdNum;
   headerNewId = "header" + IdNum;
+  lockNewId = "lock" + IdNum;
   divNewId = "div" + IdNum;
 
   // create a new div element
@@ -29,6 +33,7 @@ function add() {
   const newHeader = document.createElement("button");
   const newBreak = document.createElement("br")
   const newButton = document.createElement("button");
+  const newLock = document.createElement("button");
 
   const headerContent = document.createTextNode("Header sample");
   const buttonContent = document.createTextNode("Button sample");
@@ -42,11 +47,16 @@ function add() {
   newHeader.type = "button";
   newHeader.setAttribute("class", "header");
   newHeader.setAttribute("onclick", "changeElement(id)")
+  newLock.id = lockNewId
+  newLock.type = "button";
+  newLock.setAttribute("class", "unlocked");
+  newLock.setAttribute("onclick", "lock(id)")
   newDiv.id = divNewId;
   newDiv.setAttribute("onmouseover", "moveElement(id)")
   newDiv.appendChild(newHeader);
   newDiv.appendChild(newBreak);
   newDiv.appendChild(newButton);
+  newDiv.appendChild(newLock);
 
   // add the newly created element and its content into the DOM
   document.body.appendChild(newDiv);
@@ -60,8 +70,14 @@ function moveElement(divId) {
 
   div = document.getElementById(divId);
 
+  let divLock = div.querySelector('[onclick="lock(id)"]');
+
   div.addEventListener('mousedown', function (e) {
     document.body.setAttribute("style", "user-select: none;");
+    if (divLock.className === "locked") {
+      console.log(divLock.className);
+      return;
+    }
     isDown = true;
     offset = [
       div.offsetLeft - e.clientX,
@@ -119,4 +135,13 @@ function drawLine(div1, div2) {
   newSVG.appendChild(newLine);
 
   document.body.appendChild(newSVG);
+}
+
+function lock(id) {
+  let element = document.getElementById(id)
+  if (element.className === "locked") {
+    element.setAttribute("class", "unlocked")
+  } else {
+    element.setAttribute("class", "locked")
+  }
 }

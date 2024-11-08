@@ -54,3 +54,16 @@ line {
   stroke: white;
   stroke-width: 2;
 }
+
+[onclick="lock(id)"] {
+  width: 20px;
+  aspect-ratio: 1/1;
+}
+
+.unlocked {
+  background-color: green;
+}
+
+.locked {
+  background-color: red;
+}

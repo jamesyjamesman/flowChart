@@ -30,23 +30,18 @@ function add() {
 
   // create a new div element
   const newDiv = document.createElement("div");
-  const newHeader = document.createElement("button");
+  const newHeader = document.createElement("input");
   const newBreak = document.createElement("br")
-  const newButton = document.createElement("button");
+  const newButton = document.createElement("input");
   const newLock = document.createElement("button");
 
-  const headerContent = document.createTextNode("Header sample");
-  const buttonContent = document.createTextNode("Button sample");
-
-  newButton.appendChild(buttonContent);
   newButton.id = buttonNewId;
-  newButton.type = "button";
-  newButton.setAttribute("onclick", "changeElement(id)");
-  newHeader.appendChild(headerContent);
+  newButton.type = "text";
+  newButton.setAttribute("value", "Title Sample");
   newHeader.id = headerNewId;
-  newHeader.type = "button";
+  newHeader.type = "text";
   newHeader.setAttribute("class", "header");
-  newHeader.setAttribute("onclick", "changeElement(id)")
+  newHeader.setAttribute("value", "Description Sample");
   newLock.id = lockNewId
   newLock.type = "button";
   newLock.setAttribute("class", "unlocked");
@@ -79,10 +74,10 @@ function moveElement(divId) {
       return;
     }
     isDown = true;
-    offset = [
-      div.offsetLeft - e.clientX,
-      div.offsetTop - e.clientY
-    ];
+    offset = {
+      left: div.offsetLeft - e.clientX,
+      top: div.offsetTop - e.clientY
+    };
   }, true);
 
   document.addEventListener('mouseup', function () {
@@ -99,13 +94,13 @@ function moveElement(divId) {
         y: event.clientY
 
       };
-      if (mousePosition.x + offset[0] > 0) {
-        div.style.left = (mousePosition.x + offset[0]) + 'px';
+      if (mousePosition.x + offset.left > 0) {
+        div.style.left = (mousePosition.x + offset.left) + 'px';
       } else {
         div.style.left = '0px';
       }
-      if (mousePosition.y + offset[1] > 0) {
-        div.style.top = (mousePosition.y + offset[1]) + 'px';
+      if (mousePosition.y + offset.top > 0) {
+        div.style.top = (mousePosition.y + offset.top) + 'px';
       } else {
         div.style.top = '0px';
       }

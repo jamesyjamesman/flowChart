@@ -1,7 +1,8 @@
 div {
   border: 5px solid white;
   width: max-content;
-  padding: 0;
+  padding-left: 20px;
+  padding-right: 20px;
   margin: 0;
   border-radius: 10px;
   text-align: center;
@@ -18,21 +19,26 @@ button.header,
 input.header {
   padding: 0;
   margin-top: 10px;
-  margin-bottom: 10px;
-  margin-left: 20px;
-  margin-right: 20px;
   text-align: center;
   font-size: 50px;
+  border-color: transparent;
 }
 /* TODO: make header button determine width of element, and the content wraps when it reaches that width*/
 button,
-input {
+input,
+textarea {
   font-family: Calibri, sans-serif;
   color: white;
   background-color: black;
-  /*cursor: pointer;*/
-
+  text-align: left;
+  float: left;
+  border-color: transparent;
 }
+
+button {
+  cursor: pointer;
+}
+
 #p1 {
   padding: 1px;
   margin-top: 10px;
@@ -45,11 +51,13 @@ input {
 #add {
   font-size: 30px;
   aspect-ratio: 1/1;
+  border-color: transparent;
 }
 
 #div_add {
   bottom: 0;
   right: 0;
+  padding: 0;
 }
 
 line {
@@ -60,6 +68,7 @@ line {
 [onclick="lock(id)"] {
   width: 20px;
   aspect-ratio: 1/1;
+  float: right;
 }
 
 .unlocked {

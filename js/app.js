@@ -1,60 +1,27 @@
-function changeElement(id) {
-  let oldText = document.getElementById(id);
-  let newText = prompt("What would you like to change the description to?");
-  if (newText === "" || newText === null) {
-    newText = oldText.innerText
-  }
-  document.getElementById(id).innerHTML = newText;
-}
-
-let buttonIds = [1];
-let headerIds = [1];
-let lockIds = [1];
+let ids = [1];
 let IdNum;
-let buttonNewId;
+let descriptionNewId;
 let headerNewId;
 let lockNewId;
 let length;
 let divNewId;
 
 function add() {
-  length = buttonIds.length - 1;
-  IdNum = buttonIds[length] + 1;
-  buttonIds.push(IdNum);
-  headerIds.push(IdNum);
-  lockIds.push(IdNum);
-  buttonNewId = "button" + IdNum;
+  length = ids.length - 1;
+  IdNum = ids[length] + 1;
+  ids.push(IdNum);
+  descriptionNewId = "button" + IdNum;
   headerNewId = "header" + IdNum;
   lockNewId = "lock" + IdNum;
   divNewId = "div" + IdNum;
 
-  // create a new div element
-  const newDiv = document.createElement("div");
-  const newHeader = document.createElement("input");
-  const newBreak = document.createElement("br")
-  const newButton = document.createElement("input");
-  const newLock = document.createElement("button");
+  let title = $(`<input value='Title Sample' class='header' type='text' id=${headerNewId}>`);
+  let description = $(`<textarea id=${descriptionNewId}></textarea>`);
+  let lock = $(`<button type='button' onclick=lock(id) class='unlocked' id=${lockNewId}></button>`);
+  let div = $(`<div onmouseover=moveElement(id) id=${divNewId}></div>`);
 
-  newButton.id = buttonNewId;
-  newButton.type = "text";
-  newButton.setAttribute("value", "Title Sample");
-  newHeader.id = headerNewId;
-  newHeader.type = "text";
-  newHeader.setAttribute("class", "header");
-  newHeader.setAttribute("value", "Description Sample");
-  newLock.id = lockNewId
-  newLock.type = "button";
-  newLock.setAttribute("class", "unlocked");
-  newLock.setAttribute("onclick", "lock(id)")
-  newDiv.id = divNewId;
-  newDiv.setAttribute("onmouseover", "moveElement(id)")
-  newDiv.appendChild(newHeader);
-  newDiv.appendChild(newBreak);
-  newDiv.appendChild(newButton);
-  newDiv.appendChild(newLock);
-
-  // add the newly created element and its content into the DOM
-  document.body.appendChild(newDiv);
+  $(div).append(title, $("<br>"), description, lock);
+  $("body").append(div);
 }
 
 function moveElement(divId) {
@@ -69,8 +36,8 @@ function moveElement(divId) {
 
   div.addEventListener('mousedown', function (e) {
     document.body.setAttribute("style", "user-select: none;");
+    //TODO: make it only run if only the div is hovered over
     if (divLock.className === "locked") {
-      console.log(divLock.className);
       return;
     }
     isDown = true;

@@ -39,19 +39,12 @@ button {
   cursor: pointer;
 }
 
-#p1 {
-  padding: 1px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-left: 20px;
-  margin-right: 20px;
-  text-align: center;
-}
-
 #add {
   font-size: 30px;
   aspect-ratio: 1/1;
   border-color: transparent;
+  width: 43px;
+  text-align: center;
 }
 
 #div_add {

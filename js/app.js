@@ -1,26 +1,29 @@
 let ids = [1];
-let IdNum;
+let idNum;
 let descriptionNewId;
 let headerNewId;
 let lockNewId;
 let length;
 let divNewId;
+let divMoveNewId
 
 function add() {
   length = ids.length - 1;
-  IdNum = ids[length] + 1;
-  ids.push(IdNum);
-  descriptionNewId = "button" + IdNum;
-  headerNewId = "header" + IdNum;
-  lockNewId = "lock" + IdNum;
-  divNewId = "div" + IdNum;
+  idNum = ids[length] + 1;
+  ids.push(idNum);
+  descriptionNewId = "button" + idNum;
+  headerNewId = "header" + idNum;
+  lockNewId = "lock" + idNum;
+  divNewId = "div" + idNum;
+  divMoveNewId = "divMove" + idNum;
 
-  let title = $(`<input value='Title Sample' class='header' type='text' id=${headerNewId}>`);
-  let description = $(`<textarea id=${descriptionNewId}></textarea>`);
+  let divMove = $(`<div class="move" onmouseover="moveElement(id)" id=${divMoveNewId}>::<br>::</div>`)
+  let title = $(`<input class='header' type='text' placeholder="Title" id=${headerNewId}>`);
+  let description = $(`<textarea placeholder="Description" id=${descriptionNewId}></textarea>`);
   let lock = $(`<button type='button' onclick=lock(id) class='unlocked' id=${lockNewId}></button>`);
   let div = $(`<div onmouseover=moveElement(id) id=${divNewId}></div>`);
 
-  $(div).append(title, $("<br>"), description, lock);
+  $(div).append(divMove, title, $("<br>"), description, lock);
   $("body").append(div);
 }
 
@@ -29,8 +32,9 @@ function moveElement(divId) {
   let offset = [0, 0];
   let isDown = false;
   let div;
+  console.log(divId);
 
-  div = document.getElementById(divId);
+  div = document.getElementById(divId).parentElement;
 
   let divLock = div.querySelector('[onclick="lock(id)"]');
 
@@ -50,6 +54,7 @@ function moveElement(divId) {
   document.addEventListener('mouseup', function () {
     isDown = false;
     document.body.removeAttribute("style");
+    div = null;
   }, true);
 
   document.addEventListener('mousemove', function (event) {

@@ -64,24 +64,6 @@ line {
   stroke-width: 2;
 }
 
-[onclick="lock(id)"] {
-  width: 20px;
-  aspect-ratio: 1/1;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  margin-bottom: 0;
-  border-bottom-right-radius: 5px;
-}
-
-.unlocked {
-  background-color: green;
-}
-
-.locked {
-  background-color: red;
-}
-
 div.move {
   position: absolute;
   min-height: 100%;
@@ -101,7 +83,7 @@ div.move:hover {
 
 textarea {
   max-width: 99%;
-  width: 99%;
+  width: 90%;
   padding-left: 40px;
   min-height: 40px;
 }

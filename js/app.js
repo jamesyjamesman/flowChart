@@ -2,7 +2,6 @@ let ids = [1];
 let idNum;
 let descriptionNewId;
 let headerNewId;
-let lockNewId;
 let length;
 let divNewId;
 let divMoveNewId
@@ -13,17 +12,15 @@ function add() {
   ids.push(idNum);
   descriptionNewId = "button" + idNum;
   headerNewId = "header" + idNum;
-  lockNewId = "lock" + idNum;
   divNewId = "div" + idNum;
   divMoveNewId = "divMove" + idNum;
 
   let divMove = $(`<div class="move" onmouseover="moveElement(id)" id=${divMoveNewId}>::<br>::</div>`)
   let title = $(`<input class='header' type='text' placeholder="Title" id=${headerNewId}>`);
   let description = $(`<textarea placeholder="Description" id=${descriptionNewId}></textarea>`);
-  let lock = $(`<button type='button' onclick=lock(id) class='unlocked' id=${lockNewId}></button>`);
   let div = $(`<div onmouseover=moveElement(id) id=${divNewId}></div>`);
 
-  $(div).append(divMove, title, $("<br>"), description, lock);
+  $(div).append(divMove, title, $("<br>"), description);
   $("body").append(div);
 }
 
@@ -36,14 +33,8 @@ function moveElement(divId) {
 
   div = document.getElementById(divId).parentElement;
 
-  let divLock = div.querySelector('[onclick="lock(id)"]');
-
   div.addEventListener('mousedown', function (e) {
     document.body.setAttribute("style", "user-select: none;");
-    //TODO: make it only run if only the div is hovered over
-    if (divLock.className === "locked") {
-      return;
-    }
     isDown = true;
     offset = {
       left: div.offsetLeft - e.clientX,

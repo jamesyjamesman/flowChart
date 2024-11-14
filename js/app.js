@@ -71,6 +71,7 @@ function moveElement(divId) {
   }, true);
 }
 
+//This whole function doesn't work
 function drawLine(div1, div2) {
   div1 = div1 || document.getElementById("div1");
   div2 = div2 || document.getElementById("div2");
@@ -80,26 +81,14 @@ function drawLine(div1, div2) {
   let div1y = (div1.top + div1.bottom) / 2;
   let div2x = div2.left;
   let div2y = (div2.top + div2.bottom) / 2;
+  let midpoint = (div1x + div2x) / 2;
+  let coordinates = [[div1x, div1y], [midpoint, div1y], [midpoint, div2y], [div2x, div2y]];
   console.log(div1x, div1y, div2x, div2y);
-  const newSVG = document.createElement("svg");
-  // const newSVG = document.getElementById("svg");
-  newSVG.setAttribute("height", "1000");
-  newSVG.setAttribute("width", "1000");
-  const newLine = document.createElement("line");
-  newLine.setAttribute("x1", div1x.toString());
-  newLine.setAttribute("y1", div1y.toString());
-  newLine.setAttribute("x2", div2x.toString());
-  newLine.setAttribute("y2", div2y.toString());
-  newSVG.appendChild(newLine);
 
-  document.body.appendChild(newSVG);
-}
-
-function lock(id) {
-  let element = document.getElementById(id)
-  if (element.className === "locked") {
-    element.setAttribute("class", "unlocked")
-  } else {
-    element.setAttribute("class", "locked")
-  }
+  const newSVG = $(`<svg height="1000" width="1000"></svg>`);
+  const line1 = $(`<line x1=${coordinates[0][0].toString()} y1=${coordinates[0][1].toString()} x2=${coordinates[1][0].toString()} y2=${coordinates[1][1].toString()}>`);
+  const line2 = $(`<line x1=${coordinates[1][0].toString()} y1=${coordinates[1][1].toString()} x2=${coordinates[2][0].toString()} y2=${coordinates[2][1].toString()}>`);
+  const line3 = $(`<line x1=${coordinates[2][0].toString()} y1=${coordinates[2][1].toString()} x2=${coordinates[3][0].toString()} y2=${coordinates[3][1].toString()}>`);
+  $(newSVG).append(line1, line2, line3);
+  $("body").append(newSVG);
 }

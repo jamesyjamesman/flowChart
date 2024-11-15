@@ -87,3 +87,10 @@ textarea {
   padding-left: 40px;
   min-height: 40px;
 }
+
+div.borderDiv {
+  background-color: transparent;
+  border: dashed white 5px;
+  position: relative;
+  z-index: -100;
+}

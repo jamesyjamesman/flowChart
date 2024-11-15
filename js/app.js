@@ -92,3 +92,15 @@ function drawLine(div1, div2) {
   $(newSVG).append(line1, line2, line3);
   $("body").append(newSVG);
 }
+
+function divBox(div1, div2) {
+  div1 = div1 || document.getElementById("div1");
+  div2 = div2 || document.getElementById("div2");
+  div1 = div1.getBoundingClientRect();
+  div2 = div2.getBoundingClientRect();
+  let div1_coords = [[div1.left, div1.top], [div1.right, div1.bottom]]
+  let div2_coords = [[div2.left, div2.top], [div2.right, div2.bottom]]
+  let newDivCoords = [[(div1_coords[0][0] + div1_coords[1][0])/2, (div1_coords[0][1] + div1_coords[1][1])/2], [(div2_coords[0][0] + div2_coords[1][0])/2, (div2_coords[0][1] + div2_coords[1][1])/2]]
+  const newDiv = $(`<div style="left: ${newDivCoords[0][0] + 'px'}; top: ${newDivCoords[0][1] + 'px'}; width: ${newDivCoords[1][0] - newDivCoords[0][0] + 'px'}; height: ${newDivCoords[1][1] - newDivCoords[0][1] + 'px'}" class="borderDiv"></div>`)
+  $("body").append(newDiv);
+}

@@ -90,7 +90,12 @@ textarea {
 
 div.borderDiv {
   background-color: transparent;
-  border: dashed white 5px;
+  border: dashed white 3px;
   position: relative;
   z-index: -100;
+}
+
+button.connector {
+  background-color: white;
+  padding-left: 50px;
 }

@@ -71,28 +71,6 @@ function moveElement(divId) {
   }, true);
 }
 
-//This whole function doesn't work
-function drawLine(div1, div2) {
-  div1 = div1 || document.getElementById("div1");
-  div2 = div2 || document.getElementById("div2");
-  div1 = div1.getBoundingClientRect();
-  div2 = div2.getBoundingClientRect();
-  let div1x = div1.right;
-  let div1y = (div1.top + div1.bottom) / 2;
-  let div2x = div2.left;
-  let div2y = (div2.top + div2.bottom) / 2;
-  let midpoint = (div1x + div2x) / 2;
-  let coordinates = [[div1x, div1y], [midpoint, div1y], [midpoint, div2y], [div2x, div2y]];
-  console.log(div1x, div1y, div2x, div2y);
-
-  const newSVG = $(`<svg height="1000" width="1000"></svg>`);
-  const line1 = $(`<line x1=${coordinates[0][0].toString()} y1=${coordinates[0][1].toString()} x2=${coordinates[1][0].toString()} y2=${coordinates[1][1].toString()}>`);
-  const line2 = $(`<line x1=${coordinates[1][0].toString()} y1=${coordinates[1][1].toString()} x2=${coordinates[2][0].toString()} y2=${coordinates[2][1].toString()}>`);
-  const line3 = $(`<line x1=${coordinates[2][0].toString()} y1=${coordinates[2][1].toString()} x2=${coordinates[3][0].toString()} y2=${coordinates[3][1].toString()}>`);
-  $(newSVG).append(line1, line2, line3);
-  $("body").append(newSVG);
-}
-
 function divBox(div1, div2) {
   div1 = div1 || document.getElementById("div1");
   div2 = div2 || document.getElementById("div2");
@@ -101,6 +79,39 @@ function divBox(div1, div2) {
   let div1_coords = [[div1.left, div1.top], [div1.right, div1.bottom]]
   let div2_coords = [[div2.left, div2.top], [div2.right, div2.bottom]]
   let newDivCoords = [[(div1_coords[0][0] + div1_coords[1][0])/2, (div1_coords[0][1] + div1_coords[1][1])/2], [(div2_coords[0][0] + div2_coords[1][0])/2, (div2_coords[0][1] + div2_coords[1][1])/2]]
-  const newDiv = $(`<div style="left: ${newDivCoords[0][0] + 'px'}; top: ${newDivCoords[0][1] + 'px'}; width: ${newDivCoords[1][0] - newDivCoords[0][0] + 'px'}; height: ${newDivCoords[1][1] - newDivCoords[0][1] + 'px'}" class="borderDiv"></div>`)
+  let left = newDivCoords[0][0];
+  let top = newDivCoords[0][1];
+  let width = newDivCoords[1][0] - newDivCoords[0][0];
+  let height = newDivCoords[1][1] - newDivCoords[0][1];
+
+  //If statements effectively rearrange based on which div is topmost and leftmost (cannot have negative widths or lengths)
+  if (width < 0) {
+    left += width;
+    width = Math.abs(width)
+  }
+  if (height < 0) {
+    top += height;
+    height = Math.abs(height);
+  }
+  const newDiv = $(`<div style="left: ${left + 'px'}; top: ${top + 'px'}; width: ${width + 'px'}; height: ${height + 'px'}" class="borderDiv"></div>`)
   $("body").append(newDiv);
 }
+
+
+// This doesn't work!
+// function connections() {
+//   let div1, div2;
+//   while (true) {
+//     document.addEventListener('mousedown', function () {
+//       div1 = document.elementFromPoint(event.clientX, event.clientY);
+//       break;
+//     }, true);
+//   }
+//   while (true) {
+//     document.addEventListener('mousedown', function () {
+//       div2 = document.elementFromPoint(event.clientX, event.clientY);
+//       break;
+//     }, true);
+//   }
+//   divBox(div1, div2);
+// }

@@ -10,6 +10,7 @@ function add() {
   length = ids.length - 1;
   idNum = ids[length] + 1;
   ids.push(idNum);
+
   descriptionNewId = "button" + idNum;
   headerNewId = "header" + idNum;
   divNewId = "div" + idNum;
@@ -29,11 +30,12 @@ function moveElement(divId) {
   let offset = [0, 0];
   let isDown = false;
   let div;
-  console.log(divId);
+  let divMove;
 
-  div = document.getElementById(divId).parentElement;
+  divMove = document.getElementById(divId);
+  div = divMove.parentElement;
 
-  div.addEventListener('mousedown', function (e) {
+  divMove.addEventListener('mousedown', function (e) {
     document.body.setAttribute("style", "user-select: none;");
     isDown = true;
     offset = {
@@ -45,23 +47,22 @@ function moveElement(divId) {
   document.addEventListener('mouseup', function () {
     isDown = false;
     document.body.removeAttribute("style");
-    div = null;
   }, true);
 
   document.addEventListener('mousemove', function (event) {
     event.preventDefault();
     if (isDown) {
       mousePosition = {
-
         x: event.clientX,
         y: event.clientY
-
       };
+
       if (mousePosition.x + offset.left > 0) {
         div.style.left = (mousePosition.x + offset.left) + 'px';
       } else {
         div.style.left = '0px';
       }
+
       if (mousePosition.y + offset.top > 0) {
         div.style.top = (mousePosition.y + offset.top) + 'px';
       } else {
@@ -76,9 +77,11 @@ function divBox(div1, div2) {
   div2 = div2 || document.getElementById("div2");
   div1 = div1.getBoundingClientRect();
   div2 = div2.getBoundingClientRect();
-  let div1_coords = [[div1.left, div1.top], [div1.right, div1.bottom]]
-  let div2_coords = [[div2.left, div2.top], [div2.right, div2.bottom]]
-  let newDivCoords = [[(div1_coords[0][0] + div1_coords[1][0])/2, (div1_coords[0][1] + div1_coords[1][1])/2], [(div2_coords[0][0] + div2_coords[1][0])/2, (div2_coords[0][1] + div2_coords[1][1])/2]]
+
+  let div1Coords = [[div1.left, div1.top], [div1.right, div1.bottom]]
+  let div2Coords = [[div2.left, div2.top], [div2.right, div2.bottom]]
+  let newDivCoords = [[(div1Coords[0][0] + div1Coords[1][0])/2, (div1Coords[0][1] + div1Coords[1][1])/2], [(div2Coords[0][0] + div2Coords[1][0])/2, (div2Coords[0][1] + div2Coords[1][1])/2]]
+
   let left = newDivCoords[0][0];
   let top = newDivCoords[0][1];
   let width = newDivCoords[1][0] - newDivCoords[0][0];
@@ -93,8 +96,15 @@ function divBox(div1, div2) {
     top += height;
     height = Math.abs(height);
   }
-  const newDiv = $(`<div style="left: ${left + 'px'}; top: ${top + 'px'}; width: ${width + 'px'}; height: ${height + 'px'}" class="borderDiv"></div>`)
+  console.log(`Top left: ${left}, ${top}\nBottom right: ${left + width}, ${top + height}`)
+  const newDiv = $(`<div style="left: ${left + 'px'}; top: ${top + 'px'}; width: ${width + 'px'}; height: ${height + 'px'}" class="borderDiv" id="bounds"></div>`)
   $("body").append(newDiv);
+
+  //This outputs a different set of coordinates than the above log??
+  let newNewDiv = document.getElementById("bounds");
+  let divBounds = newNewDiv.getBoundingClientRect();
+  console.log(divBounds.left, divBounds.top);
+  console.log(divBounds.right, divBounds.bottom);
 }
 
 

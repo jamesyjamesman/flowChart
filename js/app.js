@@ -1,3 +1,12 @@
+document.addEventListener("keydown", function() {
+  if (event.key === "n") {
+    add();
+  } else if (event.key === "l") {
+    connections();
+  }
+})
+
+
 let ids = [1];
 let idNum;
 let descriptionNewId;
@@ -76,6 +85,12 @@ function divBox(div1, div2) {
   div1 = div1.getBoundingClientRect();
   div2 = div2.getBoundingClientRect();
 
+  if (div2.top < div1.top) {
+    let temp = div1;
+    div1 = div2;
+    div2 = temp;
+  }
+
   let div1Coords = [[div1.left, div1.top], [div1.right, div1.bottom]]
   let div2Coords = [[div2.left, div2.top], [div2.right, div2.bottom]]
   let newDivCoords = [[(div1Coords[0][0] + div1Coords[1][0])/2, (div1Coords[0][1] + div1Coords[1][1])/2], [(div2Coords[0][0] + div2Coords[1][0])/2, (div2Coords[0][1] + div2Coords[1][1])/2]]
@@ -84,11 +99,28 @@ function divBox(div1, div2) {
   let top = newDivCoords[0][1];
   let width = newDivCoords[1][0] - newDivCoords[0][0];
   let height = newDivCoords[1][1] - newDivCoords[0][1];
+  let styleLeft = false;
+  let leftOnly = false;
+  let topOnly = false;
+
+  if (newDivCoords[0][0] < div2.right && newDivCoords[0][0] > div2.left) {
+    leftOnly = true;
+    left = (2*left + width) / 2;
+    width = 1;
+  }
+
+  if (newDivCoords[0][1] > div2.top && newDivCoords[0][1] < div2.bottom) {
+    console.log(topOnly);
+    topOnly = true;
+    top = (2*top + height) / 2;
+    height = 1;
+  }
 
   //If statements effectively rearrange based on which div is topmost and leftmost (cannot have negative widths or lengths)
   if (width < 0) {
     left += width;
     width = Math.abs(width)
+    styleLeft = true;
   }
   if (height < 0) {
     top += height;
@@ -96,6 +128,20 @@ function divBox(div1, div2) {
   }
   console.log(`Top left: ${left}, ${top}\nBottom right: ${left + width}, ${top + height}`)
   const newDiv = $(`<div style="left: ${left + 'px'}; top: ${top + 'px'}; width: ${width + 'px'}; height: ${height + 'px'}" class="borderDiv" id="bounds"></div>`)
+
+  if (topOnly) {
+    newDiv.addClass("top");
+  }
+  else if (leftOnly) {
+    newDiv.addClass("left")
+  }
+  else if (styleLeft) {
+    newDiv.addClass("left");
+    newDiv.addClass("top");
+  } else {
+    newDiv.addClass("right");
+    newDiv.addClass("top");
+  }
   $("body").append(newDiv);
 
   //This outputs a different set of coordinates than the above log??
@@ -106,6 +152,7 @@ function divBox(div1, div2) {
 }
 
 function connections() {
+  $("body").addClass("grey");
   let div1 = null, div2 = null, temp = null;
   let listening = true;
   document.addEventListener('mousedown', function () {
@@ -133,6 +180,7 @@ function connections() {
       listening = false;
       divBox(div1, div2);
       div1 = div2 = temp = null;
+      $("body").removeClass("grey");
     }
   }, true);
 }

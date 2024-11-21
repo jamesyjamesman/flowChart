@@ -2,6 +2,10 @@ body {
   background-color: black;
 }
 
+body.grey {
+  background-color: grey;
+}
+
 div {
   border: 5px solid white;
   padding-left: 20px;
@@ -85,14 +89,31 @@ div.borderDiv {
   padding: 0;
   margin: 0;
   background-color: transparent;
-  border-radius: 0 10px 0 0;
   border: 0;
-  border-top: dashed white 3px;
-  border-right: dashed white 3px;
   position: absolute;
   z-index: -100;
+  border-radius: 0;
 }
 
+div.borderDiv.right {
+  border-right: dashed white 3px;
+}
+
+div.borderDiv.left {
+  border-left: dashed white 3px;
+}
+
+div.borderDiv.top {
+  border-top: dashed white 3px;
+}
+
+div.borderDiv.right.top {
+  border-radius: 0 10px 0 0;
+}
+
+div.borderDiv.left.top {
+  border-radius: 10px 0 0 0;
+}
 button.connector {
   background-color: white;
   padding-left: 50px;

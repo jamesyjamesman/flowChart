@@ -1,7 +1,13 @@
-document.addEventListener("keydown", function() {
-  if (event.key === "n") {
-    add();
-  } else if (event.key === "l") {
+let mouseX, mouseY;
+document.addEventListener("mousemove", function(e) {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
+document.addEventListener("keydown", function(e) {
+  if (e.key === "n") {
+    add(true);
+  } else if (e.key === "l") {
     connections();
   }
 })
@@ -15,7 +21,7 @@ let length;
 let divNewId;
 let divMoveNewId
 
-function add() {
+function add(placeAtCursor) {
   length = ids.length - 1;
   idNum = ids[length] + 1;
   ids.push(idNum);
@@ -32,6 +38,10 @@ function add() {
 
   $(div).append(divMove, title, $("<br>"), description);
   $("body").append(div);
+  if (placeAtCursor) {
+        let divId = document.getElementById(divNewId);
+        divId.setAttribute("style", `left: ${mouseX + 'px'}; top: ${mouseY + 'px'}`)
+  }
 }
 
 function moveElement(divId) {

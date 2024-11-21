@@ -19,7 +19,7 @@ function add() {
   let divMove = $(`<div class="move" onmouseover="moveElement(id)" id=${divMoveNewId}>::<br>::</div>`)
   let title = $(`<input class='header' type='text' placeholder="Title" id=${headerNewId}>`);
   let description = $(`<textarea placeholder="Description" id=${descriptionNewId}></textarea>`);
-  let div = $(`<div onmouseover=moveElement(id) id=${divNewId}></div>`);
+  let div = $(`<div id=${divNewId} class="parentDiv"></div>`);
 
   $(div).append(divMove, title, $("<br>"), description);
   $("body").append(div);
@@ -73,8 +73,6 @@ function moveElement(divId) {
 }
 
 function divBox(div1, div2) {
-  div1 = div1 || document.getElementById("div1");
-  div2 = div2 || document.getElementById("div2");
   div1 = div1.getBoundingClientRect();
   div2 = div2.getBoundingClientRect();
 
@@ -107,21 +105,34 @@ function divBox(div1, div2) {
   console.log(divBounds.right, divBounds.bottom);
 }
 
-
-// This doesn't work!
-// function connections() {
-//   let div1, div2;
-//   while (true) {
-//     document.addEventListener('mousedown', function () {
-//       div1 = document.elementFromPoint(event.clientX, event.clientY);
-//       break;
-//     }, true);
-//   }
-//   while (true) {
-//     document.addEventListener('mousedown', function () {
-//       div2 = document.elementFromPoint(event.clientX, event.clientY);
-//       break;
-//     }, true);
-//   }
-//   divBox(div1, div2);
-// }
+function connections() {
+  let div1 = null, div2 = null, temp = null;
+  let listening = true;
+  document.addEventListener('mousedown', function () {
+    if (!listening) {
+      return
+    }
+    temp = document.elementFromPoint(event.clientX, event.clientY);
+    if (temp.nodeName !== "BODY") {
+      while (temp.className !== "parentDiv") {
+        temp = temp.parentElement;
+      }
+    } else {
+      temp = null;
+      return;
+    }
+    if (div1 === null) {
+      div1 = temp;
+      div1.style.borderColor = "green";
+    } else if (div1 === temp) {
+      alert("You cannot link the same element!");
+      div2 = null;
+    } else {
+      div1.style.borderColor = "";
+      div2 = temp;
+      listening = false;
+      divBox(div1, div2);
+      div1 = div2 = temp = null;
+    }
+  }, true);
+}

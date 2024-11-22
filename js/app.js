@@ -1,13 +1,17 @@
 let mouseX, mouseY;
+let makingLine = false;
 document.addEventListener("mousemove", function(e) {
   mouseX = e.clientX;
   mouseY = e.clientY;
 });
 
 document.addEventListener("keydown", function(e) {
-  if (e.key === "n") {
+    if (document.activeElement.className === "header") {
+      document.activeElement.style.width = document.activeElement.value.length * 30 + 'px';
+  } else if (document.activeElement.nodeName === "TEXTAREA") {
+  } else if (e.key === "n") {
     add(true);
-  } else if (e.key === "l") {
+  } else if (e.key === "l" && !makingLine) {
     connections();
   }
 })

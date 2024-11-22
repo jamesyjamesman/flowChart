@@ -21,7 +21,7 @@ div {
 button,
 input,
 textarea {
-  font-family: Calibri, sans-serif;
+  font-family: monospace, sans-serif;
   color: white;
   background-color: black;
   text-align: left;
@@ -45,7 +45,7 @@ input.header {
   padding: 0;
   margin-top: 10px;
   margin-bottom: 2px;
-  text-align: center;
+  text-align: left;
   font-size: 50px;
   border-color: transparent;
   padding-left: 40px;
@@ -96,15 +96,15 @@ div.borderDiv {
 }
 
 div.borderDiv.right {
-  border-right: dashed white 3px;
+  border-right: dashed white 4px;
 }
 
 div.borderDiv.left {
-  border-left: dashed white 3px;
+  border-left: dashed white 4px;
 }
 
 div.borderDiv.top {
-  border-top: dashed white 3px;
+  border-top: dashed white 4px;
 }
 
 div.borderDiv.right.top {

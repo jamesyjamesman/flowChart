@@ -31,8 +31,7 @@ textarea {
 }
 
 textarea {
-  max-width: 99%; /*This doesn't work oops*/
-  width: 90%;
+  width: 140px;
   min-height: 40px;
   margin-left: 40px;
 }
@@ -49,6 +48,7 @@ input.header {
   text-align: center;
   font-size: 50px;
   border-color: transparent;
+  width: 140px;
 }
 
 #add {

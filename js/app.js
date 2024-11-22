@@ -24,9 +24,24 @@ document.addEventListener("keydown", function(e) {
     add(true);
   } else if (e.key === "l" && !makingLine) {
     connections();
-  }
+  } else if (e.key === "Backspace" || e.key === "Delete") {
+    deleteElement();
+    }
 })
 
+function deleteElement() {
+  //this code block is used below, could be a function (and then could just do element.remove upstairs)
+  let element = document.elementFromPoint(mouseX, mouseY);
+  if (element.nodeName !== "BODY") {
+    while (element.className !== "parentDiv") {
+      element = element.parentElement;
+    }
+  } else {
+    element = null;
+    return;
+  }
+  element.remove();
+}
 
 let ids = [1];
 let idNum;
@@ -184,10 +199,8 @@ function connections() {
   let listening = true;
   document.addEventListener('keydown', function(e) {
     if (e.key === "Escape") {
-      try {
+      if (div1) {
         div1.style.borderColor = "";
-      } catch {
-        console.log("div1 not set.");
       }
       div1 = temp = div2 = null;
       $("body").removeClass("grey");

@@ -1,3 +1,4 @@
+let connecting = false;
 let mouseX, mouseY;
 let makingLine = false;
 document.addEventListener("mousemove", function(e) {
@@ -6,7 +7,6 @@ document.addEventListener("mousemove", function(e) {
 });
 
 document.addEventListener("keydown", function(e) {
-  console.log(e.key);
     if (document.activeElement.className === "header") {
       if (document.activeElement.value.length === 0) {
         document.activeElement.style.width = '28px';
@@ -70,6 +70,7 @@ function moveElement(divId) {
   div = divMove.parentElement;
 
   divMove.addEventListener('mousedown', function (e) {
+    if (connecting) {return}
     document.body.setAttribute("style", "user-select: none;");
     isDown = true;
     offset = {
@@ -84,6 +85,7 @@ function moveElement(divId) {
   }, true);
 
   document.addEventListener('mousemove', function (event) {
+    if (connecting) {return}
     event.preventDefault();
     if (isDown) {
       mousePosition = {
@@ -135,7 +137,6 @@ function divBox(div1, div2) {
   }
 
   if (newDivCoords[0][1] > div2.top && newDivCoords[0][1] < div2.bottom) {
-    console.log(topOnly);
     topOnly = true;
     top = (2*top + height) / 2;
     height = 1;
@@ -177,9 +178,23 @@ function divBox(div1, div2) {
 }
 
 function connections() {
+  connecting = true;
   $("body").addClass("grey");
   let div1 = null, div2 = null, temp = null;
   let listening = true;
+  document.addEventListener('keydown', function(e) {
+    if (e.key === "Escape") {
+      try {
+        div1.style.borderColor = "";
+      } catch {
+        console.log("div1 not set.");
+      }
+      div1 = temp = div2 = null;
+      $("body").removeClass("grey");
+      connecting = false;
+      listening = false;
+    }
+  })
   document.addEventListener('mousedown', function () {
     if (!listening) {
       return
@@ -206,6 +221,7 @@ function connections() {
       divBox(div1, div2);
       div1 = div2 = temp = null;
       $("body").removeClass("grey");
+      connecting = false;
     }
   }, true);
 }

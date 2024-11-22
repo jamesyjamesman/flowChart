@@ -6,8 +6,19 @@ document.addEventListener("mousemove", function(e) {
 });
 
 document.addEventListener("keydown", function(e) {
+  console.log(e.key);
     if (document.activeElement.className === "header") {
-      document.activeElement.style.width = document.activeElement.value.length * 30 + 'px';
+      if (document.activeElement.value.length === 0) {
+        document.activeElement.style.width = '28px';
+      } else {
+        if (e.key === "Backspace") {
+          document.activeElement.style.width = document.activeElement.value.length * 28 - 28 + 'px';
+        } else if (e.key.length !== 1) {
+          document.activeElement.style.width = document.activeElement.value.length * 28 + 'px'; //27 is slightly not enough, 28 is too much
+        } else {
+          document.activeElement.style.width = document.activeElement.value.length * 28 + 28 + 'px';
+        }
+      }
   } else if (document.activeElement.nodeName === "TEXTAREA") {
   } else if (e.key === "n") {
     add(true);

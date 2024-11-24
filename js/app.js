@@ -1,3 +1,4 @@
+let divPairs = [[],[],[]];
 let connecting = false;
 let mouseX, mouseY;
 let makingLine = false;
@@ -25,33 +26,35 @@ document.addEventListener("keydown", function(e) {
   } else if (e.key === "l" && !makingLine) {
     connections();
   } else if (e.key === "Backspace" || e.key === "Delete") {
-    deleteElement();
+    let pastElement = findParentFromMouse();
+    if (pastElement) {
+      pastElement.remove();
+    }
     }
 })
 
-function deleteElement() {
-  //this code block is used below, could be a function (and then could just do element.remove upstairs)
+function findParentFromMouse() {
   let element = document.elementFromPoint(mouseX, mouseY);
-  if (element.nodeName !== "BODY") {
+  if (element.nodeName !== "HTML" && element.nodeName !== "BODY") {
     while (element.className !== "parentDiv") {
       element = element.parentElement;
     }
   } else {
     element = null;
-    return;
   }
-  element.remove();
+  return element;
 }
 
 let ids = [1];
-let idNum;
-let descriptionNewId;
-let headerNewId;
-let length;
-let divNewId;
-let divMoveNewId
 
 function add(placeAtCursor) {
+  let idNum;
+  let descriptionNewId;
+  let headerNewId;
+  let length;
+  let divNewId;
+  let divMoveNewId
+
   length = ids.length - 1;
   idNum = ids[length] + 1;
   ids.push(idNum);
@@ -86,6 +89,7 @@ function moveElement(divId) {
 
   divMove.addEventListener('mousedown', function (e) {
     if (connecting) {return}
+    console.log("mousedown!")
     document.body.setAttribute("style", "user-select: none;");
     isDown = true;
     offset = {
@@ -94,9 +98,10 @@ function moveElement(divId) {
     };
   }, true);
 
-  document.addEventListener('mouseup', function () {
+  divMove.addEventListener('mouseup', function () {
     isDown = false;
     document.body.removeAttribute("style");
+    changeBorders(div);
   }, true);
 
   document.addEventListener('mousemove', function (event) {
@@ -119,19 +124,35 @@ function moveElement(divId) {
       } else {
         div.style.top = '0px';
       }
+
     }
   }, true);
 }
+function changeBorders(div) {
+  if (divPairs[0][0]) {
+    let indexNum = divPairs[0].indexOf(div.id);
+    let i = 0;
+    console.log(indexNum, i, divPairs[2][0])
+    while (i <= divPairs[1][indexNum].length - 1) {
+      divBox(document.getElementById(divPairs[0][indexNum]), document.getElementById(divPairs[1][indexNum][i]));
+      document.getElementById(divPairs[2][indexNum]).remove();
+      divPairs[2].shift();
+      i++;
+    }
+  }
+}
+let boxIds = [0];
 
 function divBox(div1, div2) {
-  div1 = div1.getBoundingClientRect();
-  div2 = div2.getBoundingClientRect();
-
-  if (div2.top < div1.top) {
+  if (div2.getBoundingClientRect().top < div1.getBoundingClientRect().top) {
     let temp = div1;
     div1 = div2;
     div2 = temp;
   }
+  let div1Element = div1;
+  let div2Element = div2;
+  div1 = div1.getBoundingClientRect();
+  div2 = div2.getBoundingClientRect();
 
   let div1Coords = [[div1.left, div1.top], [div1.right, div1.bottom]]
   let div2Coords = [[div2.left, div2.top], [div2.right, div2.bottom]]
@@ -167,8 +188,13 @@ function divBox(div1, div2) {
     top += height;
     height = Math.abs(height);
   }
-  console.log(`Top left: ${left}, ${top}\nBottom right: ${left + width}, ${top + height}`)
-  const newDiv = $(`<div style="left: ${left + 'px'}; top: ${top + 'px'}; width: ${width + 'px'}; height: ${height + 'px'}" class="borderDiv" id="bounds"></div>`)
+
+  let arrayLength = boxIds.length - 1;
+  let idNum = boxIds[arrayLength] + 1;
+  boxIds.push(idNum);
+  let newId = "box" + idNum;
+  // console.log(`Top left: ${left}, ${top}\nBottom right: ${left + width}, ${top + height}`)
+  const newDiv = $(`<div style="left: ${left + 'px'}; top: ${top + 'px'}; width: ${width + 'px'}; height: ${height + 'px'}" class="borderDiv" id=${newId}></div>`)
 
   if (topOnly) {
     newDiv.addClass("top");
@@ -185,11 +211,41 @@ function divBox(div1, div2) {
   }
   $("body").append(newDiv);
 
+  let length;
+  let tempElement = div1Element;
+  let tempElement2 = div2Element;
+  for (let i = 0; i <= 1; i++) {
+    divPairs[0].push(tempElement.id)
+    divPairs[2].push(newId);
+    length = divPairs[0].length - 1;
+    console.log(length);
+    try {
+      if (divPairs[1][length][0]) {
+        divPairs[1][length].push(tempElement2.id);
+      }
+    } catch {
+      divPairs[1].push([tempElement2.id]);
+    }
+    tempElement = div2Element;
+    tempElement2 = div1Element;
+  }
+  console.log(divPairs[2][1])
+// console.log(arrayLength);
+//   try {
+//     if (divPairs[2][arrayLength][0] !== undefined) {
+//       divPairs[2][arrayLength].push(newId);
+//       console.log(divPairs[2][arrayLength][100]);
+//     }
+//   } catch {
+//     divPairs[2][arrayLength].push([newId]);
+//     console.log(divPairs[2][arrayLength][0]);
+//   }
+
   //This outputs a different set of coordinates than the above log??
-  let newNewDiv = document.getElementById("bounds");
-  let divBounds = newNewDiv.getBoundingClientRect();
-  console.log(divBounds.left, divBounds.top);
-  console.log(divBounds.right, divBounds.bottom);
+  // let newNewDiv = document.getElementById("bounds");
+  // let divBounds = newNewDiv.getBoundingClientRect();
+  // console.log(divBounds.left, divBounds.top);
+  // console.log(divBounds.right, divBounds.bottom);
 }
 
 function connections() {
@@ -212,15 +268,7 @@ function connections() {
     if (!listening) {
       return
     }
-    temp = document.elementFromPoint(event.clientX, event.clientY);
-    if (temp.nodeName !== "BODY") {
-      while (temp.className !== "parentDiv") {
-        temp = temp.parentElement;
-      }
-    } else {
-      temp = null;
-      return;
-    }
+    temp = findParentFromMouse()
     if (div1 === null) {
       div1 = temp;
       div1.style.borderColor = "green";

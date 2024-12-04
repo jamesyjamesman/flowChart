@@ -143,7 +143,6 @@ function changeBorders(div) {
 let boxIds = [0];
 
 function divBox(div1, div2) {
-  if (div1 === div2) {return} //todo: figure out WHY sometimes they are the same and fix it there.
   console.log(div1, div2)
   if (div2.getBoundingClientRect().top < div1.getBoundingClientRect().top) {
     let temp = div1;

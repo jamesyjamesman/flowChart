@@ -1,4 +1,4 @@
-let divPairs = [[],[],[]];
+let boxes = [[], []];
 let connecting = false;
 let mouseX, mouseY;
 let makingLine = false;
@@ -89,9 +89,8 @@ function moveElement(divId) {
 
   divMove.addEventListener('mousedown', function (e) {
     if (connecting) {return}
-    console.log("mousedown!")
-    document.body.setAttribute("style", "user-select: none;");
     isDown = true;
+    document.body.setAttribute("style", "user-select: none;");
     offset = {
       left: div.offsetLeft - e.clientX,
       top: div.offsetTop - e.clientY
@@ -101,7 +100,7 @@ function moveElement(divId) {
   divMove.addEventListener('mouseup', function () {
     isDown = false;
     document.body.removeAttribute("style");
-    changeBorders(div);
+    // changeBorders(div);
   }, true);
 
   document.addEventListener('mousemove', function (event) {
@@ -124,26 +123,28 @@ function moveElement(divId) {
       } else {
         div.style.top = '0px';
       }
-
+      changeBorders(div);
     }
   }, true);
 }
 function changeBorders(div) {
-  if (divPairs[0][0]) {
-    let indexNum = divPairs[0].indexOf(div.id);
-    let i = 0;
-    console.log(indexNum, i, divPairs[2][0])
-    while (i <= divPairs[1][indexNum].length - 1) {
-      divBox(document.getElementById(divPairs[0][indexNum]), document.getElementById(divPairs[1][indexNum][i]));
-      document.getElementById(divPairs[2][indexNum]).remove();
-      divPairs[2].shift();
-      i++;
+    let indexNum = boxes[0].indexOf(div);
+    console.log(boxes[0])
+    if (indexNum === -1) {return}
+    console.log(indexNum)
+    for (let i = 0; i <= boxes[1][indexNum].length - 1; i++) {
+      let boxId = div.getAttribute("data-connector")
+      console.log(boxId)
+      document.getElementById(boxId).remove();
+      let divs = document.querySelectorAll(`[data-connector=${boxId}]`);
+      divBox(divs[0], divs[1]);
     }
-  }
 }
 let boxIds = [0];
 
 function divBox(div1, div2) {
+  if (div1 === div2) {return} //todo: figure out WHY sometimes they are the same and fix it there.
+  console.log(div1, div2)
   if (div2.getBoundingClientRect().top < div1.getBoundingClientRect().top) {
     let temp = div1;
     div1 = div2;
@@ -188,14 +189,20 @@ function divBox(div1, div2) {
     top += height;
     height = Math.abs(height);
   }
+  let newId;
+  if (div1Element.hasAttribute("data-connector")) {
+    newId = div1Element.getAttribute("data-connector");
+  } else {
+    let arrayLength = boxIds.length - 1;
+    let idNum = boxIds[arrayLength] + 1;
+    boxIds.push(idNum);
+    newId = "box" + idNum;
+    // console.log(`Top left: ${left}, ${top}\nBottom right: ${left + width}, ${top + height}`)
+    div1Element.setAttribute("data-connector", newId);
+    div2Element.setAttribute("data-connector", newId);
+  }
 
-  let arrayLength = boxIds.length - 1;
-  let idNum = boxIds[arrayLength] + 1;
-  boxIds.push(idNum);
-  let newId = "box" + idNum;
-  // console.log(`Top left: ${left}, ${top}\nBottom right: ${left + width}, ${top + height}`)
   const newDiv = $(`<div style="left: ${left + 'px'}; top: ${top + 'px'}; width: ${width + 'px'}; height: ${height + 'px'}" class="borderDiv" id=${newId}></div>`)
-
   if (topOnly) {
     newDiv.addClass("top");
   }
@@ -209,27 +216,25 @@ function divBox(div1, div2) {
     newDiv.addClass("right");
     newDiv.addClass("top");
   }
+  console.log(newDiv)
   $("body").append(newDiv);
 
-  let length;
-  let tempElement = div1Element;
-  let tempElement2 = div2Element;
-  for (let i = 0; i <= 1; i++) {
-    divPairs[0].push(tempElement.id)
-    divPairs[2].push(newId);
-    length = divPairs[0].length - 1;
-    console.log(length);
-    try {
-      if (divPairs[1][length][0]) {
-        divPairs[1][length].push(tempElement2.id);
+  data_setters(div1Element, div2Element);
+  data_setters(div2Element, div1Element);
+
+  function data_setters(div1Element, div2Element) {
+    // Check if array exists to add to!
+    let index;
+    if (boxes[0].indexOf(div1Element) < 0) {
+      boxes[0].push(div1Element);
+      boxes[1].push([div2Element]);
+    } else {
+      index = boxes[0].indexOf(div1Element);
+      if (boxes[1][index].indexOf(div2Element) < 0) {
+        boxes[1][index].push(div2Element);
       }
-    } catch {
-      divPairs[1].push([tempElement2.id]);
     }
-    tempElement = div2Element;
-    tempElement2 = div1Element;
   }
-  console.log(divPairs[2][1])
 // console.log(arrayLength);
 //   try {
 //     if (divPairs[2][arrayLength][0] !== undefined) {

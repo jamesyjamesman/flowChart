@@ -1,4 +1,4 @@
-let boxes = [[], []];
+let boxes = [[], [], []];
 let connecting = false;
 let mouseX, mouseY;
 let makingLine = false;
@@ -129,28 +129,26 @@ function moveElement(divId) {
 }
 function changeBorders(div) {
     let indexNum = boxes[0].indexOf(div);
-    console.log(boxes[0])
     if (indexNum === -1) {return}
-    console.log(indexNum)
     for (let i = 0; i <= boxes[1][indexNum].length - 1; i++) {
-      let boxId = div.getAttribute("data-connector")
-      console.log(boxId)
-      document.getElementById(boxId).remove();
-      let divs = document.querySelectorAll(`[data-connector=${boxId}]`);
-      divBox(divs[0], divs[1]);
+      let oldId = boxes[2][indexNum][i];
+      document.getElementById(oldId).remove();
+      divBox(div, boxes[1][indexNum][i], false, oldId);
     }
 }
 let boxIds = [0];
-
-function divBox(div1, div2) {
-  console.log(div1, div2)
+let makingBox = false;
+function divBox(div1, div2, newBox, oldId) {
+  if (makingBox) {return}
+  makingBox = true;
+  let div1Element = div1;
+  let div2Element = div2;
   if (div2.getBoundingClientRect().top < div1.getBoundingClientRect().top) {
     let temp = div1;
     div1 = div2;
     div2 = temp;
   }
-  let div1Element = div1;
-  let div2Element = div2;
+
   div1 = div1.getBoundingClientRect();
   div2 = div2.getBoundingClientRect();
 
@@ -189,16 +187,16 @@ function divBox(div1, div2) {
     height = Math.abs(height);
   }
   let newId;
-  if (div1Element.hasAttribute("data-connector")) {
-    newId = div1Element.getAttribute("data-connector");
-  } else {
+  let addData;
+  if (newBox) {
     let arrayLength = boxIds.length - 1;
     let idNum = boxIds[arrayLength] + 1;
     boxIds.push(idNum);
     newId = "box" + idNum;
-    // console.log(`Top left: ${left}, ${top}\nBottom right: ${left + width}, ${top + height}`)
-    div1Element.setAttribute("data-connector", newId);
-    div2Element.setAttribute("data-connector", newId);
+    addData = true;
+  } else {
+    newId = oldId;
+    addData = false;
   }
 
   const newDiv = $(`<div style="left: ${left + 'px'}; top: ${top + 'px'}; width: ${width + 'px'}; height: ${height + 'px'}" class="borderDiv" id=${newId}></div>`)
@@ -215,41 +213,31 @@ function divBox(div1, div2) {
     newDiv.addClass("right");
     newDiv.addClass("top");
   }
-  console.log(newDiv)
   $("body").append(newDiv);
 
-  data_setters(div1Element, div2Element);
-  data_setters(div2Element, div1Element);
+  if (!addData) {makingBox = false; return;}
+  let divConnector = newId
+  data_setters(div1Element, div2Element, divConnector);
+  data_setters(div2Element, div1Element, divConnector);
 
-  function data_setters(div1Element, div2Element) {
+  function data_setters(div1Element, div2Element, divConnector) {
     // Check if array exists to add to!
     let index;
     if (boxes[0].indexOf(div1Element) < 0) {
       boxes[0].push(div1Element);
       boxes[1].push([div2Element]);
+      boxes[2].push([divConnector]);
     } else {
       index = boxes[0].indexOf(div1Element);
       if (boxes[1][index].indexOf(div2Element) < 0) {
         boxes[1][index].push(div2Element);
       }
+      if (boxes[2][index].indexOf(divConnector) < 0) {
+        boxes[2][index].push(divConnector);
+      }
     }
   }
-// console.log(arrayLength);
-//   try {
-//     if (divPairs[2][arrayLength][0] !== undefined) {
-//       divPairs[2][arrayLength].push(newId);
-//       console.log(divPairs[2][arrayLength][100]);
-//     }
-//   } catch {
-//     divPairs[2][arrayLength].push([newId]);
-//     console.log(divPairs[2][arrayLength][0]);
-//   }
-
-  //This outputs a different set of coordinates than the above log??
-  // let newNewDiv = document.getElementById("bounds");
-  // let divBounds = newNewDiv.getBoundingClientRect();
-  // console.log(divBounds.left, divBounds.top);
-  // console.log(divBounds.right, divBounds.bottom);
+  makingBox = false;
 }
 
 function connections() {
@@ -283,7 +271,7 @@ function connections() {
       div1.style.borderColor = "";
       div2 = temp;
       listening = false;
-      divBox(div1, div2);
+      divBox(div1, div2, true);
       div1 = div2 = temp = null;
       $("body").removeClass("grey");
       connecting = false;

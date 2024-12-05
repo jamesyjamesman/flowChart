@@ -30,6 +30,10 @@ textarea {
   margin-bottom: 10px;
 }
 
+input[disabled], textarea[disabled] {
+  pointer-events:none
+}
+
 textarea {
   width: 140px;
   min-height: 40px;

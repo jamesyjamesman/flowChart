@@ -234,10 +234,10 @@ function divBox(div1, div2, newBox, oldId) {
 
   if (!addData) {makingBox = false; return;}
   let divConnector = newId
-  data_setters(div1Element, div2Element, divConnector);
-  data_setters(div2Element, div1Element, divConnector);
+  dataSetters(div1Element, div2Element, divConnector);
+  dataSetters(div2Element, div1Element, divConnector);
 
-  function data_setters(div1Element, div2Element, divConnector) {
+  function dataSetters(div1Element, div2Element, divConnector) {
     // Check if array exists to add to!
     let index;
     if (boxes[0].indexOf(div1Element) < 0) {
@@ -259,6 +259,19 @@ function divBox(div1, div2, newBox, oldId) {
 
 function connections() {
   connecting = true;
+  disableFields(true);
+  function disableFields(disable) {
+    let inputs = Array.from(document.querySelectorAll(".header"));
+    let textareas = Array.from(document.querySelectorAll("textarea"));
+    let changing = inputs.concat(textareas);
+    for (let i = 0; i <= changing.length - 1; i++) {
+      if (disable) {
+        changing[i].setAttribute("disabled", "");
+      } else {
+        changing[i].removeAttribute("disabled");
+      }
+  }
+  }
   $("body").addClass("grey");
   let div1 = null, div2 = null, temp = null;
   let listening = true;
@@ -291,6 +304,7 @@ function connections() {
       divBox(div1, div2, true);
       div1 = div2 = temp = null;
       $("body").removeClass("grey");
+      disableFields(false);
       connecting = false;
     }
   }, true);

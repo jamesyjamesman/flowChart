@@ -32,7 +32,8 @@ document.addEventListener("keydown", function(e) {
 
 function findParentFromMouse() {
   let element = document.elementFromPoint(mouseX, mouseY);
-  if (element.nodeName !== "HTML" && element.nodeName !== "BODY") {
+  // Ensuring the amount of classes is less than 1 excludes the connecting div
+  if (element.nodeName !== "HTML" && element.nodeName !== "BODY" && element.classList.length <= 1 ) {
     while (element.className !== "parentDiv") {
       element = element.parentElement;
     }
@@ -291,6 +292,7 @@ function connections() {
       return
     }
     temp = findParentFromMouse()
+    if (temp === null) {return}
     if (div1 === null) {
       div1 = temp;
       div1.style.borderColor = "green";
@@ -302,6 +304,7 @@ function connections() {
       div2 = temp;
       listening = false;
       divBox(div1, div2, true);
+
       div1 = div2 = temp = null;
       $("body").removeClass("grey");
       disableFields(false);

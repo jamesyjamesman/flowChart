@@ -26,10 +26,7 @@ document.addEventListener("keydown", function(e) {
   } else if (e.key === "l" && !makingLine) {
     connections();
   } else if (e.key === "Backspace" || e.key === "Delete") {
-    let pastElement = findParentFromMouse();
-    if (pastElement) {
-      pastElement.remove();
-    }
+      deleteElement();
     }
 })
 
@@ -136,6 +133,26 @@ function changeBorders(div) {
       divBox(div, boxes[1][indexNum][i], false, oldId);
     }
 }
+function deleteElement() {
+  let pastElement = findParentFromMouse();
+  if (pastElement) {
+    let index = boxes[0].indexOf(pastElement);
+    if (index === -1) {pastElement.remove(); return}
+    for (let i = 0; i <= boxes[1][index].length - 1; i++) {
+      let oldIndex = boxes[0].indexOf(boxes[1][index][i]);
+      let elementIndex = boxes[1][oldIndex].indexOf(pastElement);
+      boxes[1][oldIndex].splice(elementIndex, 1);
+    }
+    for (let i = 0; i <= boxes[2][index].length - 1; i++) {
+      document.getElementById(boxes[2][index][i]).remove();
+    }
+    boxes[0].splice(index, 1);
+    boxes[1].splice(index, 1);
+    boxes[2].splice(index, 1);
+    pastElement.remove();
+  }
+}
+
 let boxIds = [0];
 let makingBox = false;
 function divBox(div1, div2, newBox, oldId) {

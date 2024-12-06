@@ -2,13 +2,16 @@ let boxes = [[], [], []];
 let connecting = false;
 let mouseX, mouseY;
 let makingLine = false;
+
 document.addEventListener("mousemove", function(e) {
   mouseX = e.clientX;
   mouseY = e.clientY;
 });
 
 document.addEventListener("keydown", function(e) {
+    // Input fields
     if (document.activeElement.className === "header") {
+      // Various choices to try to match the length of the input to length of the characters
       if (document.activeElement.value.length === 0) {
         document.activeElement.style.width = '28px';
       } else {
@@ -20,20 +23,21 @@ document.addEventListener("keydown", function(e) {
           document.activeElement.style.width = document.activeElement.value.length * 28 + 28 + 'px';
         }
       }
+    // Do nothing if it is a textarea
   } else if (document.activeElement.nodeName === "TEXTAREA") {
   } else if (e.key === "n") {
     add(true);
   } else if (e.key === "l" && !makingLine) {
     connections();
   } else if (e.key === "Backspace" || e.key === "Delete") {
-      deleteElement();
+    deleteElement();
     }
 })
 
-function findParentFromMouse() {
+function findParentFromMouse() { // Can only return a div with class "parentDiv"
   let element = document.elementFromPoint(mouseX, mouseY);
   // Ensuring the amount of classes is less than 1 excludes the connecting div
-  if (element.nodeName !== "HTML" && element.nodeName !== "BODY" && element.classList.length <= 1 ) {
+  if (element.nodeName !== "HTML" && element.nodeName !== "BODY" && element.classList.length <= 1) {
     while (element.className !== "parentDiv") {
       element = element.parentElement;
     }
@@ -43,6 +47,7 @@ function findParentFromMouse() {
   return element;
 }
 
+// ids variable should persist
 let ids = [1];
 
 function add(placeAtCursor) {
@@ -70,8 +75,8 @@ function add(placeAtCursor) {
   $(div).append(divMove, title, $("<br>"), description);
   $("body").append(div);
   if (placeAtCursor) {
-        let divId = document.getElementById(divNewId);
-        divId.setAttribute("style", `left: ${mouseX + 'px'}; top: ${mouseY + 'px'}`)
+    let divId = document.getElementById(divNewId);
+    divId.setAttribute("style", `left: ${mouseX + 'px'}; top: ${mouseY + 'px'}`)
   }
 }
 
@@ -234,6 +239,8 @@ function divBox(div1, div2, newBox, oldId) {
   $("body").append(newDiv);
 
   if (!addData) {makingBox = false; return;}
+  drawArrow(div2Element, "top");
+
   let divConnector = newId
   dataSetters(div1Element, div2Element, divConnector);
   dataSetters(div2Element, div1Element, divConnector);
@@ -258,9 +265,33 @@ function divBox(div1, div2, newBox, oldId) {
   makingBox = false;
 }
 
+function drawArrow(div, side) {
+  div = div.getBoundingClientRect();
+  let x, y, divClass;
+    if (side === "top") {
+      x = (div.left + div.right) / 2;
+      y = div.top;
+      divClass = "arrowTop";
+  } else if (side === "left") {
+      x = div.left;
+      y = (div.top + div.bottom) / 2;
+      divClass = "arrowLeft"
+  } else if (side === "bottom") {
+      x = (div.left + div.right) / 2;
+      y = div.bottom;
+      divClass = "arrowBottom";
+  } else if (side === "right") {
+      x = div.right;
+      y = (div.top + div.bottom) / 2;
+      divClass = "arrowRight"
+  }
+    $("body").append(`<div style="left: ${x + 'px'}; top: ${y + 'px'}" class=${divClass}></div>`);
+}
+
 function connections() {
   connecting = true;
   disableFields(true);
+
   function disableFields(disable) {
     let inputs = Array.from(document.querySelectorAll(".header"));
     let textareas = Array.from(document.querySelectorAll("textarea"));
@@ -271,7 +302,7 @@ function connections() {
       } else {
         changing[i].removeAttribute("disabled");
       }
-  }
+    }
   }
   $("body").addClass("grey");
   let div1 = null, div2 = null, temp = null;

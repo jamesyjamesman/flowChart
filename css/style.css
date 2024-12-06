@@ -31,7 +31,7 @@ textarea {
 }
 
 input[disabled], textarea[disabled] {
-  pointer-events:none
+  pointer-events: none
 }
 
 textarea {
@@ -118,6 +118,40 @@ div.borderDiv.right.top {
 div.borderDiv.left.top {
   border-radius: 10px 0 0 0;
 }
+
+div.arrowTop {
+  height: 0;
+  width: 0;
+  border-left: 10px solid transparent;
+  border-top: 20px solid white;
+  border-right: 10px solid transparent;
+  border-bottom: 20px solid transparent;
+  border-radius: 0;
+  padding: 0;
+  background-color: transparent;
+}
+
+div.arrowLeft {
+  height: 0;
+  width: 0;
+  border: 0;
+  border-left: 5px solid white;
+}
+
+div.arrowRight {
+  height: 0;
+  width: 0;
+  border: 0;
+  border-right: 5px solid white;
+}
+
+div.arrowBottom {
+  height: 0;
+  width: 0;
+  border: 0;
+  border-bottom: 5px solid white;
+}
+
 button.connector {
   background-color: white;
   padding-left: 50px;

@@ -1,4 +1,5 @@
 let boxes = [[], [], []];
+let draggableElements = [];
 let connecting = false;
 let mouseX, mouseY;
 let makingLine = false;
@@ -56,7 +57,7 @@ function add(placeAtCursor) {
   let headerNewId;
   let length;
   let divNewId;
-  let divMoveNewId
+  let divMoveNewId;
 
   length = ids.length - 1;
   idNum = ids[length] + 1;
@@ -74,10 +75,14 @@ function add(placeAtCursor) {
 
   $(div).append(divMove, title, $("<br>"), description);
   $("body").append(div);
+  let divElement = document.getElementById(divNewId);
   if (placeAtCursor) {
-    let divId = document.getElementById(divNewId);
-    divId.setAttribute("style", `left: ${mouseX + 'px'}; top: ${mouseY + 'px'}`)
+    divElement.setAttribute("style", `left: ${mouseX + 'px'}; top: ${mouseY + 'px'}`)
   }
+  let temp = new DraggableElement();
+  temp.full = divElement;
+  temp.id = divNewId;
+  draggableElements.push(temp);
 }
 
 function moveElement(divId) {
@@ -131,12 +136,18 @@ function moveElement(divId) {
   }, true);
 }
 function changeBorders(div) {
-    let indexNum = boxes[0].indexOf(div);
-    if (indexNum === -1) {return}
-    for (let i = 0; i <= boxes[1][indexNum].length - 1; i++) {
-      let oldId = boxes[2][indexNum][i];
+  let divObject = null;
+    for (let j = 0; j <= draggableElements.length - 1; j++) {
+      if (draggableElements[j].full === div) {
+        divObject = draggableElements[j];
+      }
+    }
+    if (divObject === null) {return}
+
+    for (let i = 0; i <= divObject.siblings.length - 1; i++) {
+      let oldId = divObject.lines[i];
       document.getElementById(oldId).remove();
-      divBox(div, boxes[1][indexNum][i], false, oldId);
+      divBox(div, divObject.siblings[i], false, oldId);
     }
 }
 function deleteElement() {
@@ -161,23 +172,22 @@ function deleteElement() {
 
 let boxIds = [0];
 let makingBox = false;
-function divBox(div1, div2, newBox, oldId) {
+
+function divBox(div1, div2, newBox, oldId, separations) {
   if (makingBox) {return}
   makingBox = true;
   let div1Element = div1;
   let div2Element = div2;
-  if (div2.getBoundingClientRect().top < div1.getBoundingClientRect().top) {
-    let temp = div1;
-    div1 = div2;
-    div2 = temp;
-  }
+
+  //Somewhere in here: if (separations) {Do stuff based on that number}
+  //I have to completely write divBox
 
   div1 = div1.getBoundingClientRect();
   div2 = div2.getBoundingClientRect();
 
   let div1Coords = [[div1.left, div1.top], [div1.right, div1.bottom]]
   let div2Coords = [[div2.left, div2.top], [div2.right, div2.bottom]]
-  let newDivCoords = [[(div1Coords[0][0] + div1Coords[1][0])/2, (div1Coords[0][1] + div1Coords[1][1])/2], [(div2Coords[0][0] + div2Coords[1][0])/2, (div2Coords[0][1] + div2Coords[1][1])/2]]
+  let newDivCoords = [[(div1Coords[0][0] + div1Coords[1][0])/2, (div1Coords[0][1] + div1Coords[1][1])/2], [(div2Coords[0][0] + div2Coords[1][0])/2, (div2Coords[0][1] + div2Coords[1][1])/2]];
 
   let left = newDivCoords[0][0];
   let top = newDivCoords[0][1];
@@ -285,7 +295,7 @@ function drawArrow(div, side) {
       y = (div.top + div.bottom) / 2;
       divClass = "arrowRight"
   }
-    $("body").append(`<div style="left: ${x + 'px'}; top: ${y + 'px'}" class=${divClass}></div>`);
+    $("body").append(`<div style="left: ${x + 'px'}; top: ${y + 'px'}" class="${divClass} arrow"></div>`);
 }
 
 function connections() {
@@ -334,6 +344,15 @@ function connections() {
       div1.style.borderColor = "";
       div2 = temp;
       listening = false;
+
+      let div2Index = boxes[0].indexOf(div2);
+      if (div2Index >= 0) {
+        let amount = boxes[2][div2Index].length;
+        for (let i = 0; i <= amount - 1; i++) {
+          divBox(boxes[1][div2Index][i], div2, false, boxes[2][div2Index][i], amount + 1)
+        }
+      }
+
       divBox(div1, div2, true);
 
       div1 = div2 = temp = null;
@@ -342,4 +361,13 @@ function connections() {
       connecting = false;
     }
   }, true);
+}
+
+class DraggableElement {
+  constructor(full, id, siblings, lines) {
+    this.full = "<div></div>";
+    this.id = null;
+    this.siblings = [];
+    this.lines = [];
+  }
 }

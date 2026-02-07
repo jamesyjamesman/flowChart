@@ -39,7 +39,7 @@ function findParentFromMouse() { // Can only return a div with class "parentDiv"
   let element = document.elementFromPoint(mouseX, mouseY);
   // Ensuring the amount of classes is less than 1 excludes the connecting div
   if (element.nodeName !== "HTML" && element.nodeName !== "BODY" && element.classList.length <= 1) {
-    while (element.className !== "parentDiv") {
+      while (element.className !== "parentDiv") {
       element = element.parentElement;
     }
   } else {
@@ -52,36 +52,17 @@ function findParentFromMouse() { // Can only return a div with class "parentDiv"
 let ids = [1];
 
 function add(placeAtCursor) {
-  let idNum;
-  let descriptionNewId;
-  let headerNewId;
-  let length;
-  let divNewId;
-  let divMoveNewId;
-
-  length = ids.length - 1;
-  idNum = ids[length] + 1;
+  const length = ids.length - 1;
+  const idNum = ids[length] + 1;
   ids.push(idNum);
 
-  descriptionNewId = "button" + idNum;
-  headerNewId = "header" + idNum;
-  divNewId = "div" + idNum;
-  divMoveNewId = "divMove" + idNum;
-
-  let divMove = $(`<div class="move" onmouseover="moveElement(id)" id=${divMoveNewId}>::<br>::</div>`)
-  let title = $(`<input class='header' type='text' placeholder="Title" id=${headerNewId}>`);
-  let description = $(`<textarea placeholder="Description" id=${descriptionNewId}></textarea>`);
-  let div = $(`<div id=${divNewId} class="parentDiv"></div>`);
-
-  $(div).append(divMove, title, $("<br>"), description);
-  $("body").append(div);
-  let divElement = document.getElementById(divNewId);
+  const temp = new DraggableElement(idNum);
+    const divElement = temp.html[0];
+    $("body").append(divElement);
   if (placeAtCursor) {
-    divElement.setAttribute("style", `left: ${mouseX + 'px'}; top: ${mouseY + 'px'}`)
+    divElement.style.left = `${mouseX + 'px'}`;
+    divElement.style.top = `${mouseY + 'px'}`;
   }
-  let temp = new DraggableElement();
-  temp.full = divElement;
-  temp.id = divNewId;
   draggableElements.push(temp);
 }
 
@@ -361,13 +342,4 @@ function connections() {
       connecting = false;
     }
   }, true);
-}
-
-class DraggableElement {
-  constructor(full, id, siblings, lines) {
-    this.full = "<div></div>";
-    this.id = null;
-    this.siblings = [];
-    this.lines = [];
-  }
 }

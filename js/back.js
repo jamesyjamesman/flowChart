@@ -1,9 +1,12 @@
 class DraggableElement {
+    static elements = [];
+
     constructor(id) {
         this.id = id;
         this.siblings = [];
         this.lines = [];
         this.html = this.createHTML();
+        DraggableElement.elements.push(this);
     }
 
     createHTML() {
@@ -19,5 +22,23 @@ class DraggableElement {
 
         div.append(divMove, title, $("<br>"), description);
         return div;
+    }
+
+    addSibling(draggableElement) {
+        this.siblings.push(draggableElement);
+        if (!draggableElement.siblings.includes(this)) {
+            draggableElement.siblings.push(this);
+        }
+    }
+
+    static getJSOFromDOM(htmlElement) {
+        const idNum = parseInt(htmlElement.id.match(/\d+/));
+        console.log(idNum);
+        DraggableElement.elements.forEach(element => {
+            if (element.id === idNum) {
+                return element;
+            }
+        })
+        throw new Error("Javascript object not found!");
     }
 }

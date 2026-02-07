@@ -119,7 +119,8 @@ function moveElement(divId) {
 function changeBorders(div) {
   let divObject = null;
     for (let j = 0; j <= draggableElements.length - 1; j++) {
-      if (draggableElements[j].full === div) {
+        //todo this could be bugged
+      if (draggableElements[j].html === div) {
         divObject = draggableElements[j];
       }
     }
@@ -287,13 +288,13 @@ function connections() {
     let inputs = Array.from(document.querySelectorAll(".header"));
     let textareas = Array.from(document.querySelectorAll("textarea"));
     let changing = inputs.concat(textareas);
-    for (let i = 0; i <= changing.length - 1; i++) {
-      if (disable) {
-        changing[i].setAttribute("disabled", "");
-      } else {
-        changing[i].removeAttribute("disabled");
-      }
-    }
+    changing.forEach(element => {
+        if (disable) {
+            element.setAttribute("disabled", "");
+        } else {
+            element.removeAttribute("disabled");
+        }
+    });
   }
   $("body").addClass("grey");
   let div1 = null, div2 = null, temp = null;

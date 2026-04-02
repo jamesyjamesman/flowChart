@@ -132,6 +132,7 @@ function changeBorders(div) {
       divBox(div, divObject.siblings[i], false, oldId);
     }
 }
+// There is wayy too much happening here
 function deleteElement() {
   let pastElement = findParentFromMouse();
   if (pastElement) {
@@ -158,80 +159,81 @@ let makingBox = false;
 function divBox(div1, div2, newBox, oldId, separations) {
   if (makingBox) {return}
   makingBox = true;
-  let div1Element = div1;
-  let div2Element = div2;
-
-  //Somewhere in here: if (separations) {Do stuff based on that number}
-  //I have to completely write divBox
-
-  div1 = div1.getBoundingClientRect();
-  div2 = div2.getBoundingClientRect();
-
-  let div1Coords = [[div1.left, div1.top], [div1.right, div1.bottom]]
-  let div2Coords = [[div2.left, div2.top], [div2.right, div2.bottom]]
-  let newDivCoords = [[(div1Coords[0][0] + div1Coords[1][0])/2, (div1Coords[0][1] + div1Coords[1][1])/2], [(div2Coords[0][0] + div2Coords[1][0])/2, (div2Coords[0][1] + div2Coords[1][1])/2]];
-
-  let left = newDivCoords[0][0];
-  let top = newDivCoords[0][1];
-  let width = newDivCoords[1][0] - newDivCoords[0][0];
-  let height = newDivCoords[1][1] - newDivCoords[0][1];
-  let styleLeft = false;
-  let leftOnly = false;
-  let topOnly = false;
-
-  if (newDivCoords[0][0] < div2.right && newDivCoords[0][0] > div2.left) {
-    leftOnly = true;
-    left = (2*left + width) / 2;
-    width = 1;
-  }
-
-  if (newDivCoords[0][1] > div2.top && newDivCoords[0][1] < div2.bottom) {
-    topOnly = true;
-    top = (2*top + height) / 2;
-    height = 1;
-  }
-
-  //If statements effectively rearrange based on which div is topmost and leftmost (cannot have negative widths or lengths)
-  if (width < 0) {
-    left += width;
-    width = Math.abs(width)
-    styleLeft = true;
-  }
-  if (height < 0) {
-    top += height;
-    height = Math.abs(height);
-  }
-  let newId;
-  let addData;
-  if (newBox) {
-    let arrayLength = boxIds.length - 1;
-    let idNum = boxIds[arrayLength] + 1;
-    boxIds.push(idNum);
-    newId = "box" + idNum;
-    addData = true;
-  } else {
-    newId = oldId;
-    addData = false;
-  }
-
-  const newDiv = $(`<div style="left: ${left + 'px'}; top: ${top + 'px'}; width: ${width + 'px'}; height: ${height + 'px'}" class="borderDiv" id=${newId}></div>`)
-  if (topOnly) {
-    newDiv.addClass("top");
-  }
-  else if (leftOnly) {
-    newDiv.addClass("left")
-  }
-  else if (styleLeft) {
-    newDiv.addClass("left");
-    newDiv.addClass("top");
-  } else {
-    newDiv.addClass("right");
-    newDiv.addClass("top");
-  }
-  $("body").append(newDiv);
+  DraggableElement.getJSOFromDOM(div1).drawLines();
+  // let div1Element = div1;
+  // let div2Element = div2;
+  //
+  // //Somewhere in here: if (separations) {Do stuff based on that number}
+  // //I have to completely write divBox
+  //
+  // div1 = div1.getBoundingClientRect();
+  // div2 = div2.getBoundingClientRect();
+  //
+  // let div1Coords = [[div1.left, div1.top], [div1.right, div1.bottom]]
+  // let div2Coords = [[div2.left, div2.top], [div2.right, div2.bottom]]
+  // let newDivCoords = [[(div1Coords[0][0] + div1Coords[1][0])/2, (div1Coords[0][1] + div1Coords[1][1])/2], [(div2Coords[0][0] + div2Coords[1][0])/2, (div2Coords[0][1] + div2Coords[1][1])/2]];
+  //
+  // let left = newDivCoords[0][0];
+  // let top = newDivCoords[0][1];
+  // let width = newDivCoords[1][0] - newDivCoords[0][0];
+  // let height = newDivCoords[1][1] - newDivCoords[0][1];
+  // let styleLeft = false;
+  // let leftOnly = false;
+  // let topOnly = false;
+  //
+  // if (newDivCoords[0][0] < div2.right && newDivCoords[0][0] > div2.left) {
+  //   leftOnly = true;
+  //   left = (2*left + width) / 2;
+  //   width = 1;
+  // }
+  //
+  // if (newDivCoords[0][1] > div2.top && newDivCoords[0][1] < div2.bottom) {
+  //   topOnly = true;
+  //   top = (2*top + height) / 2;
+  //   height = 1;
+  // }
+  //
+  // //If statements effectively rearrange based on which div is topmost and leftmost (cannot have negative widths or lengths)
+  // if (width < 0) {
+  //   left += width;
+  //   width = Math.abs(width)
+  //   styleLeft = true;
+  // }
+  // if (height < 0) {
+  //   top += height;
+  //   height = Math.abs(height);
+  // }
+  // let newId;
+  // let addData;
+  // if (newBox) {
+  //   let arrayLength = boxIds.length - 1;
+  //   let idNum = boxIds[arrayLength] + 1;
+  //   boxIds.push(idNum);
+  //   newId = "box" + idNum;
+  //   addData = true;
+  // } else {
+  //   newId = oldId;
+  //   addData = false;
+  // }
+  //
+  // const newDiv = $(`<div style="left: ${left + 'px'}; top: ${top + 'px'}; width: ${width + 'px'}; height: ${height + 'px'}" class="borderDiv" id=${newId}></div>`)
+  // if (topOnly) {
+  //   newDiv.addClass("top");
+  // }
+  // else if (leftOnly) {
+  //   newDiv.addClass("left")
+  // }
+  // else if (styleLeft) {
+  //   newDiv.addClass("left");
+  //   newDiv.addClass("top");
+  // } else {
+  //   newDiv.addClass("right");
+  //   newDiv.addClass("top");
+  // }
+  // $("body").append(newDiv);
 
   if (!addData) {makingBox = false; return;}
-  drawArrow(div2Element, "top");
+  // drawArrow(div2Element, "top");
 
   let divConnector = newId
   dataSetters(div1Element, div2Element, divConnector);
@@ -312,7 +314,7 @@ function connections() {
   })
   document.addEventListener('mousedown', function () {
     if (!listening) {
-      return
+      return;
     }
     temp = findParentFromMouse()
     if (temp === null) {return}
@@ -323,19 +325,23 @@ function connections() {
       alert("You cannot link the same element!");
       div2 = null;
     } else {
+        console.log(div1);
+        DraggableElement.getJSOFromDOM(div1).addSibling(div2);
       div1.style.borderColor = "";
       div2 = temp;
       listening = false;
 
-      let div2Index = boxes[0].indexOf(div2);
-      if (div2Index >= 0) {
-        let amount = boxes[2][div2Index].length;
-        for (let i = 0; i <= amount - 1; i++) {
-          divBox(boxes[1][div2Index][i], div2, false, boxes[2][div2Index][i], amount + 1)
-        }
-      }
+      // let div2Index = boxes[0].indexOf(div2);
+      // if (div2Index >= 0) {
+      //   let amount = boxes[2][div2Index].length;
+      //   for (let i = 0; i <= amount - 1; i++) {
+      //     divBox(boxes[1][div2Index][i], div2, false, boxes[2][div2Index][i], amount + 1)
+      //   }
+      // }
+      //
+      // divBox(div1, div2, true);
 
-      divBox(div1, div2, true);
+        drawAllConnections();
 
       div1 = div2 = temp = null;
       $("body").removeClass("grey");
@@ -343,4 +349,11 @@ function connections() {
       connecting = false;
     }
   }, true);
+}
+
+function drawAllConnections() {
+    const elements = DraggableElement.elements;
+    elements.forEach(element => {
+        element.drawLines();
+    })
 }

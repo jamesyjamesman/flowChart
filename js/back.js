@@ -33,7 +33,7 @@ class DraggableElement {
 
         const divMove = document.createElement("div");
         divMove.classList.add("move");
-        divMove.addEventListener("mouseover", () => {moveElement(id)}) // might need to just be divMoveNewId or whatever
+        divMove.addEventListener("mouseover", () => {moveElement(divMoveNewId)}) // might need to just be divMoveNewId or whatever
         divMove.id = divMoveNewId;
         divMove.innerHTML += "::<br>::";
 

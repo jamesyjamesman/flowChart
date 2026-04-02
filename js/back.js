@@ -83,7 +83,6 @@ class DraggableElement {
         lineBox.style.top = div1Center[1] + "px";
 
         DraggableElement.arrowMap.put(this, child, lineBox);
-        console.log(lineBox);
         document.body.append(lineBox);
 
         // let styleLeft = false;

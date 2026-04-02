@@ -196,7 +196,7 @@ function connections() {
         document.body.classList.remove("grey");
         disableFields(false);
         document.removeEventListener('keydown', listenForEscape);
-        document.removeEventListener('mousedown', linkDivs);
+        document.removeEventListener('mousedown', linkDivs, true);
     }
 }
 

@@ -1,5 +1,4 @@
 let boxes = [[], [], []];
-let draggableElements = [];
 let mouseX, mouseY;
 let makingLine = false;
 
@@ -51,18 +50,17 @@ function findParentFromMouse() { // Can only return a div with class "parentDiv"
 let ids = [1];
 
 function add(placeAtCursor) {
-  const length = ids.length - 1;
-  const idNum = ids[length] + 1;
-  ids.push(idNum);
+    const length = ids.length - 1;
+    const idNum = ids[length] + 1;
+    ids.push(idNum);
 
-  const temp = new DraggableElement(idNum);
-    const divElement = temp.html[0];
-    $("body").append(divElement);
-  if (placeAtCursor) {
-    divElement.style.left = `${mouseX + 'px'}`;
-    divElement.style.top = `${mouseY + 'px'}`;
-  }
-  draggableElements.push(temp);
+    const newObject = new DraggableElement(idNum);
+    const divElement = newObject.html;
+    if (placeAtCursor) {
+        divElement.style.left = `${mouseX + 'px'}`;
+        divElement.style.top = `${mouseY + 'px'}`;
+    }
+    document.body.append(divElement);
 }
 
 function moveElement(divId) {
@@ -117,10 +115,10 @@ function moveElement(divId) {
 }
 function changeBorders(div) {
   let divObject = null;
-    for (let j = 0; j <= draggableElements.length - 1; j++) {
-        //todo this could be bugged
-      if (draggableElements[j].html === div) {
-        divObject = draggableElements[j];
+    for (let j = 0; j < DraggableElement.elements.length; j++) {
+        //todo this could be bugged (idk what this does in the first place)
+      if (DraggableElement.elements[j].html === div) {
+        divObject = DraggableElement.elements[j];
       }
     }
     if (divObject === null) {return}
@@ -133,6 +131,12 @@ function changeBorders(div) {
 }
 // There is wayy too much happening here
 function deleteElement() {
+    /// Remove object from static array
+    /// Remove html from page
+    /// Remove object from parent's children array
+    /// Remove any instances in arrays between parents and it and it and children
+    /// Remove lines from page
+    /// Remove lines from Map
   let pastElement = findParentFromMouse();
   if (pastElement) {
     let index = boxes[0].indexOf(pastElement);

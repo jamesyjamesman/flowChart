@@ -44,14 +44,14 @@ class DraggableElement {
     addChild(draggableElement) {
         this.children.push(draggableElement);
         if (!draggableElement.parents.includes(this)) {
-            draggableElement.parents.push(this);
+            draggableElement.addParent(this);
         }
     }
 
     addParent(draggableElement) {
         this.parents.add(draggableElement);
         if (!draggableElement.children.includes(this)) {
-            draggableElement.children.push(this);
+            draggableElement.addChild(this);
         }
     }
 
@@ -127,6 +127,10 @@ class DraggableElement {
             // }
             // $("body").append(newDiv);
         });
+    }
+
+    getFamily() {
+        return this.children.concat(this.parents);
     }
 
     static getJSOFromDOM(htmlElement) {

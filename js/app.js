@@ -1,3 +1,5 @@
+createFirstElement();
+
 let boxes = [[], [], []];
 let mouseX, mouseY;
 let makingLine = false;
@@ -114,16 +116,9 @@ function moveElement(divId) {
   }, true);
 }
 function changeBorders(div) {
-  let divObject = null;
-    for (let j = 0; j < DraggableElement.elements.length; j++) {
-        //todo this could be bugged (idk what this does in the first place)
-      if (DraggableElement.elements[j].html === div) {
-        divObject = DraggableElement.elements[j];
-      }
-    }
-    if (divObject === null) {return}
+    let divObject = DraggableElement.getJSOFromDOM(div);
 
-    for (let i = 0; i <= divObject.siblings.length - 1; i++) {
+    for (let i = 0; i < divObject.getFamily().length - 1; i++) { //todo this is not good
       let oldId = divObject.lines[i];
       document.getElementById(oldId).remove();
       divBox(div, divObject.siblings[i], false, oldId);
@@ -340,4 +335,17 @@ function drawAllConnections() {
     elements.forEach(element => {
         element.drawLines();
     })
+}
+
+function createFirstElement() {
+    const firstHTML = new DraggableElement(1).html;
+    const input = firstHTML.querySelector("input");
+    input.value = "Flowchart Tool!";
+    input.style.width = "440px";
+
+    const textArea = firstHTML.querySelector("textarea");
+    textArea.style.width = "440px";
+    textArea.style.height = "66px";
+    document.body.append(firstHTML);
+
 }

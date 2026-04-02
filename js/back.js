@@ -17,12 +17,27 @@ class DraggableElement {
         const divNewId = "div" + this.id;
         const divMoveNewId = "divMove" + this.id;
 
-        const divMove = $(`<div class="move" onmouseover="moveElement(id)" id=${divMoveNewId}>::<br>::</div>`)
-        const title = $(`<input class='header' type='text' placeholder="Title" id=${headerNewId}>`);
-        const description = $(`<textarea placeholder="Description" id=${descriptionNewId}></textarea>`);
-        const div = $(`<div id=${divNewId} class="parentDiv"></div>`);
+        const div = document.createElement("div");
+        div.id = divNewId;
+        div.classList.add("parentDiv");
 
-        div.append(divMove, title, $("<br>"), description);
+        const title = document.createElement("input");
+        title.classList.add("header");
+        title.type = "text";
+        title.placeholder = "Title";
+        title.id = headerNewId;
+
+        const description = document.createElement("textarea");
+        description.placeholder = "Description";
+        description.id = descriptionNewId;
+
+        const divMove = document.createElement("div");
+        divMove.classList.add("move");
+        divMove.addEventListener("mouseover", () => {moveElement(id)}) // might need to just be divMoveNewId or whatever
+        divMove.id = divMoveNewId;
+        divMove.innerHTML += "::<br>::";
+
+        div.append(divMove, title, document.createElement("br"), description);
         return div;
     }
 

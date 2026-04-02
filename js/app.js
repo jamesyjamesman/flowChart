@@ -1,6 +1,5 @@
 createFirstElement();
 
-let boxes = [[], [], []];
 let mouseX, mouseY;
 let makingLine = false;
 
@@ -10,28 +9,34 @@ document.addEventListener("mousemove", function(e) {
 });
 
 document.addEventListener("keydown", function(e) {
+    let hoveredElement = document.activeElement;
     // Input fields
-    if (document.activeElement.className === "header") {
+    if (hoveredElement.className === "header") {
       // Various choices to try to match the length of the input to length of the characters
-      if (document.activeElement.value.length === 0) {
-        document.activeElement.style.width = '28px';
+      if (hoveredElement.value.length === 0) {
+        hoveredElement.style.width = '28px';
       } else {
         if (e.key === "Backspace") {
-          document.activeElement.style.width = document.activeElement.value.length * 28 - 28 + 'px';
+          hoveredElement.style.width = document.activeElement.value.length * 28 - 28 + 'px';
         } else if (e.key.length !== 1) {
-          document.activeElement.style.width = document.activeElement.value.length * 28 + 'px'; //27 is slightly not enough, 28 is too much
+          hoveredElement.style.width = document.activeElement.value.length * 28 + 'px'; //27 is slightly not enough, 28 is too much
         } else {
-          document.activeElement.style.width = document.activeElement.value.length * 28 + 28 + 'px';
+          hoveredElement.style.width = document.activeElement.value.length * 28 + 28 + 'px';
         }
       }
     // Do nothing if it is a textarea
-  } else if (document.activeElement.nodeName === "TEXTAREA") {
+  } else if (hoveredElement.nodeName === "TEXTAREA") {
   } else if (e.key === "n") {
     add(true);
   } else if (e.key === "l" && !makingLine) {
     connections();
   } else if (e.key === "Backspace" || e.key === "Delete") {
-    deleteElement();
+        while (hoveredElement.className !== "parentDiv" && hoveredElement.nodeName !== "BODY") {
+            hoveredElement = hoveredElement.parentElement;
+        }
+        if (hoveredElement.className === "parentDiv") {
+            DraggableElement.getJSOFromDOM(hoveredElement).delete();
+        }
     }
 })
 
@@ -176,9 +181,12 @@ function connections() {
             alert("You cannot link the same element!");
         } else {
             div2 = temp;
-            DraggableElement.getJSOFromDOM(div1).addChild(DraggableElement.getJSOFromDOM(div2));
 
-            drawAllConnections();
+            const parentJSO = DraggableElement.getJSOFromDOM(div1);
+            const childJSO = DraggableElement.getJSOFromDOM(div2);
+            parentJSO.addChild(childJSO);
+            parentJSO.drawLine(childJSO);
+
             endConnections();
         }
     }

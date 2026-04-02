@@ -3,7 +3,7 @@ class DraggableElement {
     static arrowMap = new ElementLineMap();
 
     constructor() {
-        this.id = DraggableElement.elements.length === 0 ? 1 : DraggableElement.elements[DraggableElement.elements.length-1] + 1;
+        this.id = DraggableElement.elements.length === 0 ? 1 : DraggableElement.elements[DraggableElement.elements.length-1].id + 1;
         this.children = [];
         this.parents = [];
         this.lines = [];
@@ -75,13 +75,15 @@ class DraggableElement {
 
         const lineBox = document.createElement("div");
         lineBox.classList.add("fullBorder");
-        lineBox.width = Math.abs(div1Center[0] - div2Center[0]);
-        lineBox.height = Math.abs(div1Center[1] - div2Center[1]);
+        lineBox.classList.add("borderDiv");
+        lineBox.style.width = Math.abs(div1Center[0] - div2Center[0]) + "px";
+        lineBox.style.height = Math.abs(div1Center[1] - div2Center[1]) + "px";
 
-        lineBox.left = div1Center[0];
-        lineBox.top = div1Center[1];
+        lineBox.style.left = div1Center[0] + "px";
+        lineBox.style.top = div1Center[1] + "px";
 
         DraggableElement.arrowMap.put(this, child, lineBox);
+        console.log(lineBox);
         document.body.append(lineBox);
 
         // let styleLeft = false;

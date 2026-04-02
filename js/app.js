@@ -114,140 +114,8 @@ function changeBorders(div) {
     for (let i = 0; i < divObject.getFamily().length - 1; i++) { //todo this is not good
       let oldId = divObject.lines[i];
       document.getElementById(oldId).remove();
-      divBox(div, divObject.siblings[i], false, oldId);
+      // divBox(div, divObject.siblings[i], false, oldId);
     }
-}
-// There is wayy too much happening here
-function deleteElement() {
-    /// Remove object from static array
-    /// Remove html from page
-    /// Remove object from parent's children array
-    /// Remove any instances in arrays between parents and it and it and children
-    /// Remove lines from page
-    /// Remove lines from Map
-  let pastElement = findParentFromMouse();
-  if (pastElement) {
-    let index = boxes[0].indexOf(pastElement);
-    if (index === -1) {pastElement.remove(); return}
-    for (let i = 0; i <= boxes[1][index].length - 1; i++) {
-      let oldIndex = boxes[0].indexOf(boxes[1][index][i]);
-      let elementIndex = boxes[1][oldIndex].indexOf(pastElement);
-      boxes[1][oldIndex].splice(elementIndex, 1);
-    }
-    for (let i = 0; i <= boxes[2][index].length - 1; i++) {
-      document.getElementById(boxes[2][index][i]).remove();
-    }
-    boxes[0].splice(index, 1);
-    boxes[1].splice(index, 1);
-    boxes[2].splice(index, 1);
-    pastElement.remove();
-  }
-}
-
-let boxIds = [0];
-let makingBox = false;
-
-function divBox(div1, div2, newBox, oldId, separations) {
-  if (makingBox) {return}
-  makingBox = true;
-  DraggableElement.getJSOFromDOM(div1).drawLines();
-  // let div1Element = div1;
-  // let div2Element = div2;
-  //
-  // //Somewhere in here: if (separations) {Do stuff based on that number}
-  // //I have to completely write divBox
-  //
-  // div1 = div1.getBoundingClientRect();
-  // div2 = div2.getBoundingClientRect();
-  //
-  // let div1Coords = [[div1.left, div1.top], [div1.right, div1.bottom]]
-  // let div2Coords = [[div2.left, div2.top], [div2.right, div2.bottom]]
-  // let newDivCoords = [[(div1Coords[0][0] + div1Coords[1][0])/2, (div1Coords[0][1] + div1Coords[1][1])/2], [(div2Coords[0][0] + div2Coords[1][0])/2, (div2Coords[0][1] + div2Coords[1][1])/2]];
-  //
-  // let left = newDivCoords[0][0];
-  // let top = newDivCoords[0][1];
-  // let width = newDivCoords[1][0] - newDivCoords[0][0];
-  // let height = newDivCoords[1][1] - newDivCoords[0][1];
-  // let styleLeft = false;
-  // let leftOnly = false;
-  // let topOnly = false;
-  //
-  // if (newDivCoords[0][0] < div2.right && newDivCoords[0][0] > div2.left) {
-  //   leftOnly = true;
-  //   left = (2*left + width) / 2;
-  //   width = 1;
-  // }
-  //
-  // if (newDivCoords[0][1] > div2.top && newDivCoords[0][1] < div2.bottom) {
-  //   topOnly = true;
-  //   top = (2*top + height) / 2;
-  //   height = 1;
-  // }
-  //
-  // //If statements effectively rearrange based on which div is topmost and leftmost (cannot have negative widths or lengths)
-  // if (width < 0) {
-  //   left += width;
-  //   width = Math.abs(width)
-  //   styleLeft = true;
-  // }
-  // if (height < 0) {
-  //   top += height;
-  //   height = Math.abs(height);
-  // }
-  // let newId;
-  // let addData;
-  // if (newBox) {
-  //   let arrayLength = boxIds.length - 1;
-  //   let idNum = boxIds[arrayLength] + 1;
-  //   boxIds.push(idNum);
-  //   newId = "box" + idNum;
-  //   addData = true;
-  // } else {
-  //   newId = oldId;
-  //   addData = false;
-  // }
-  //
-  // const newDiv = $(`<div style="left: ${left + 'px'}; top: ${top + 'px'}; width: ${width + 'px'}; height: ${height + 'px'}" class="borderDiv" id=${newId}></div>`)
-  // if (topOnly) {
-  //   newDiv.addClass("top");
-  // }
-  // else if (leftOnly) {
-  //   newDiv.addClass("left")
-  // }
-  // else if (styleLeft) {
-  //   newDiv.addClass("left");
-  //   newDiv.addClass("top");
-  // } else {
-  //   newDiv.addClass("right");
-  //   newDiv.addClass("top");
-  // }
-  // $("body").append(newDiv);
-
-  if (!addData) {makingBox = false; return;}
-  // drawArrow(div2Element, "top");
-
-  let divConnector = newId
-  dataSetters(div1Element, div2Element, divConnector);
-  dataSetters(div2Element, div1Element, divConnector);
-
-  function dataSetters(div1Element, div2Element, divConnector) {
-    // Check if array exists to add to!
-    let index;
-    if (boxes[0].indexOf(div1Element) < 0) {
-      boxes[0].push(div1Element);
-      boxes[1].push([div2Element]);
-      boxes[2].push([divConnector]);
-    } else {
-      index = boxes[0].indexOf(div1Element);
-      if (boxes[1][index].indexOf(div2Element) < 0) {
-        boxes[1][index].push(div2Element);
-      }
-      if (boxes[2][index].indexOf(divConnector) < 0) {
-        boxes[2][index].push(divConnector);
-      }
-    }
-  }
-  makingBox = false;
 }
 
 function drawArrow(div, side) {
@@ -308,7 +176,7 @@ function connections() {
             alert("You cannot link the same element!");
         } else {
             div2 = temp;
-            DraggableElement.getJSOFromDOM(div1).addChild(div2);
+            DraggableElement.getJSOFromDOM(div1).addChild(DraggableElement.getJSOFromDOM(div2));
 
             drawAllConnections();
             endConnections();
@@ -317,7 +185,7 @@ function connections() {
 
     function endConnections() {
         if (div1 != null) div1.style.borderColor = "";
-        document.body.removeClass("grey");
+        document.body.classList.remove("grey");
         disableFields(false);
         document.removeEventListener('keydown', listenForEscape);
         document.removeEventListener('mousedown', linkDivs);

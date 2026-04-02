@@ -48,15 +48,8 @@ function findParentFromMouse() { // Can only return a div with class "parentDiv"
   return element;
 }
 
-// ids variable should persist
-let ids = [1];
-
 function add(placeAtCursor) {
-    const length = ids.length - 1;
-    const idNum = ids[length] + 1;
-    ids.push(idNum);
-
-    const newObject = new DraggableElement(idNum);
+    const newObject = new DraggableElement();
     const divElement = newObject.html;
     if (placeAtCursor) {
         divElement.style.left = `${mouseX + 'px'}`;
@@ -314,6 +307,7 @@ function connections() {
         } else if (div1 === temp) {
             alert("You cannot link the same element!");
         } else {
+            div2 = temp;
             DraggableElement.getJSOFromDOM(div1).addChild(div2);
 
             drawAllConnections();
@@ -334,11 +328,11 @@ function drawAllConnections() {
     const elements = DraggableElement.elements;
     elements.forEach(element => {
         element.drawLines();
-    })
+    });
 }
 
 function createFirstElement() {
-    const firstHTML = new DraggableElement(1).html;
+    const firstHTML = new DraggableElement().html;
     const input = firstHTML.querySelector("input");
     input.value = "Flowchart Tool!";
     input.style.width = "440px";
@@ -347,5 +341,4 @@ function createFirstElement() {
     textArea.style.width = "440px";
     textArea.style.height = "66px";
     document.body.append(firstHTML);
-
 }

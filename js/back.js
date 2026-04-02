@@ -2,8 +2,8 @@ class DraggableElement {
     static elements = [];
     static arrowMap = new ElementLineMap();
 
-    constructor(id) {
-        this.id = id;
+    constructor() {
+        this.id = DraggableElement.elements.length === 0 ? 1 : DraggableElement.elements[DraggableElement.elements.length-1] + 1;
         this.children = [];
         this.parents = [];
         this.lines = [];

@@ -30,7 +30,7 @@ textarea {
   margin-bottom: 10px;
 }
 
-input[disabled], textarea[disabled] {
+.disabled {
   pointer-events: none
 }
 
@@ -97,6 +97,10 @@ div.borderDiv {
   position: absolute;
   z-index: -100;
   border-radius: 0;
+}
+
+div.borderDiv.fullBorder {
+    border: dashed white 4px;
 }
 
 div.borderDiv.right {

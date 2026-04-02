@@ -60,88 +60,83 @@ class DraggableElement {
             const div1 = this.html.getBoundingClientRect();
             const div2 = child.html.getBoundingClientRect();
 
-            let div1Coords = [[div1.left, div1.top], [div1.right, div1.bottom]]
-            let div2Coords = [[div2.left, div2.top], [div2.right, div2.bottom]]
-            let newDivCoords = [[(div1Coords[0][0] + div1Coords[1][0])/2, (div1Coords[0][1] + div1Coords[1][1])/2], [(div2Coords[0][0] + div2Coords[1][0])/2, (div2Coords[0][1] + div2Coords[1][1])/2]];
+            const div1Center = [(div1.left + div1.right)/2, (div1.top + div1.bottom)/2];
+            const div2Center = [(div2.left + div2.right/2), (div2.top + div2.bottom)/2];
 
-            let left = newDivCoords[0][0];
-            let top = newDivCoords[0][1];
-            let width = newDivCoords[1][0] - newDivCoords[0][0];
-            let height = newDivCoords[1][1] - newDivCoords[0][1];
-            let styleLeft = false;
-            let leftOnly = false;
-            let topOnly = false;
+            // Rearrangement here
 
-            if (newDivCoords[0][0] < div2.right && newDivCoords[0][0] > div2.left) {
-                leftOnly = true;
-                left = (2*left + width) / 2;
-                width = 1;
-            }
+            const lineBox = document.createElement("div");
+            lineBox.classList.add("fullBorder");
+            lineBox.width = Math.abs(div1Center[0] - div2Center[0]);
+            lineBox.height = Math.abs(div1Center[1] - div2Center[1]);
 
-            if (newDivCoords[0][1] > div2.top && newDivCoords[0][1] < div2.bottom) {
-                topOnly = true;
-                top = (2*top + height) / 2;
-                height = 1;
-            }
+            lineBox.left = div1Center[0];
+            lineBox.top = div1Center[1];
 
-            //If statements effectively rearrange based on which div is topmost and leftmost (cannot have negative widths or lengths)
-            if (width < 0) {
-                left += width;
-                width = Math.abs(width)
-                styleLeft = true;
-            }
-            if (height < 0) {
-                top += height;
-                height = Math.abs(height);
-            }
-            let newId;
-            if (newBox) {
-                let arrayLength = boxIds.length - 1;
-                let idNum = boxIds[arrayLength] + 1;
-                boxIds.push(idNum);
-                newId = "box" + idNum;
-            } else {
-                newId = oldId;
-            }
+            DraggableElement.arrowMap.put(this, child, lineBox);
+            document.body.append(lineBox);
 
-            const newDiv = $(`<div style="left: ${left + 'px'}; top: ${top + 'px'}; width: ${width + 'px'}; height: ${height + 'px'}" class="borderDiv" id=${newId}></div>`)
-            if (topOnly) {
-                newDiv.addClass("top");
-            }
-            else if (leftOnly) {
-                newDiv.addClass("left")
-            }
-            else if (styleLeft) {
-                newDiv.addClass("left");
-                newDiv.addClass("top");
-            } else {
-                newDiv.addClass("right");
-                newDiv.addClass("top");
-            }
-            $("body").append(newDiv);
+            // let styleLeft = false;
+            // let leftOnly = false;
+            // let topOnly = false;
+            //
+            // if (newDivCoords[0][0] < div2.right && newDivCoords[0][0] > div2.left) {
+            //     leftOnly = true;
+            //     left = (2*left + width) / 2;
+            //     width = 1;
+            // }
+            //
+            // if (newDivCoords[0][1] > div2.top && newDivCoords[0][1] < div2.bottom) {
+            //     topOnly = true;
+            //     top = (2*top + height) / 2;
+            //     height = 1;
+            // }
+            //
+            // //If statements effectively rearrange based on which div is topmost and leftmost (cannot have negative widths or lengths)
+            // if (width < 0) {
+            //     left += width;
+            //     width = Math.abs(width)
+            //     styleLeft = true;
+            // }
+            // if (height < 0) {
+            //     top += height;
+            //     height = Math.abs(height);
+            // }
+            // let newId;
+            // if (newBox) {
+            //     let arrayLength = boxIds.length - 1;
+            //     let idNum = boxIds[arrayLength] + 1;
+            //     boxIds.push(idNum);
+            //     newId = "box" + idNum;
+            // } else {
+            //     newId = oldId;
+            // }
+            //
+            // if (topOnly) {
+            //     newDiv.addClass("top");
+            // }
+            // else if (leftOnly) {
+            //     newDiv.addClass("left")
+            // }
+            // else if (styleLeft) {
+            //     newDiv.addClass("left");
+            //     newDiv.addClass("top");
+            // } else {
+            //     newDiv.addClass("right");
+            //     newDiv.addClass("top");
+            // }
+            // $("body").append(newDiv);
         });
     }
 
     static getJSOFromDOM(htmlElement) {
         const idNum = parseInt(htmlElement.id.match(/\d+/));
-        console.log(idNum);
-        console.log(this.elements);
         for (let i = 0; i < DraggableElement.elements.length; i++) {
             const element = DraggableElement.elements[i];
             if (element.id === idNum) {
-                console.log(element);
-                console.log(typeof element);
                 return element;
             }
         }
-        // DraggableElement.elements.forEach(element => {
-        //     console.log(element.id);
-        //     if (element.id === idNum) {
-        //         console.log("returned!");
-        //         return element;
-        //     }
-        // });
-        // console.log("how am i here");
         throw new Error("Javascript object not found!");
     }
 }

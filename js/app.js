@@ -1,6 +1,5 @@
 let boxes = [[], [], []];
 let draggableElements = [];
-let connecting = false;
 let mouseX, mouseY;
 let makingLine = false;
 
@@ -283,72 +282,53 @@ function drawArrow(div, side) {
 }
 
 function connections() {
-  connecting = true;
-  disableFields(true);
+    disableFields(true);
 
-  function disableFields(disable) {
-    let inputs = Array.from(document.querySelectorAll(".header"));
-    let textareas = Array.from(document.querySelectorAll("textarea"));
-    let changing = inputs.concat(textareas);
-    changing.forEach(element => {
-        if (disable) {
-            element.setAttribute("disabled", "");
+    function disableFields(disable) {
+        let inputs = Array.from(document.querySelectorAll(".header"));
+        let textAreas = Array.from(document.querySelectorAll("textarea"));
+        let changing = inputs.concat(textAreas);
+        changing.forEach(element => {
+            if (disable) {
+                element.classList.add("disabled");
+            } else {
+                element.classList.remove("disabled");
+            }
+        });
+    }
+
+    document.body.classList.add("grey");
+    let div1 = null, div2 = null, temp = null;
+    document.addEventListener('keydown', (e) => listenForEscape(e))
+    document.addEventListener('mousedown', linkDivs, true); //idk what this option is for
+
+    function listenForEscape(e) {
+        if (e.key === "Escape") endConnections();
+    }
+
+    function linkDivs() {
+        temp = findParentFromMouse();
+        if (temp === null) return;
+        if (div1 === null) {
+            div1 = temp;
+            div1.style.borderColor = "green";
+        } else if (div1 === temp) {
+            alert("You cannot link the same element!");
         } else {
-            element.removeAttribute("disabled");
+            DraggableElement.getJSOFromDOM(div1).addChild(div2);
+
+            drawAllConnections();
+            endConnections();
         }
-    });
-  }
-  $("body").addClass("grey");
-  let div1 = null, div2 = null, temp = null;
-  let listening = true;
-  document.addEventListener('keydown', function(e) {
-    if (e.key === "Escape") {
-      if (div1) {
-        div1.style.borderColor = "";
-      }
-      div1 = temp = div2 = null;
-      $("body").removeClass("grey");
-      connecting = false;
-      listening = false;
     }
-  })
-  document.addEventListener('mousedown', function () {
-    if (!listening) {
-      return;
+
+    function endConnections() {
+        if (div1 != null) div1.style.borderColor = "";
+        document.body.removeClass("grey");
+        disableFields(false);
+        document.removeEventListener('keydown', listenForEscape);
+        document.removeEventListener('mousedown', linkDivs);
     }
-    temp = findParentFromMouse()
-    if (temp === null) {return}
-    if (div1 === null) {
-      div1 = temp;
-      div1.style.borderColor = "green";
-    } else if (div1 === temp) {
-      alert("You cannot link the same element!");
-      div2 = null;
-    } else {
-        console.log(div1);
-        DraggableElement.getJSOFromDOM(div1).addSibling(div2);
-      div1.style.borderColor = "";
-      div2 = temp;
-      listening = false;
-
-      // let div2Index = boxes[0].indexOf(div2);
-      // if (div2Index >= 0) {
-      //   let amount = boxes[2][div2Index].length;
-      //   for (let i = 0; i <= amount - 1; i++) {
-      //     divBox(boxes[1][div2Index][i], div2, false, boxes[2][div2Index][i], amount + 1)
-      //   }
-      // }
-      //
-      // divBox(div1, div2, true);
-
-        drawAllConnections();
-
-      div1 = div2 = temp = null;
-      $("body").removeClass("grey");
-      disableFields(false);
-      connecting = false;
-    }
-  }, true);
 }
 
 function drawAllConnections() {

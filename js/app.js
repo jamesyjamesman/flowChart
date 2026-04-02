@@ -76,7 +76,7 @@ function moveElement(divId) {
   div = divMove.parentElement;
 
   divMove.addEventListener('mousedown', function (e) {
-    if (connecting) {return}
+    // if (connecting) {return} //TODO add this back lol
     isDown = true;
     document.body.setAttribute("style", "user-select: none;");
     offset = {
@@ -92,7 +92,7 @@ function moveElement(divId) {
   }, true);
 
   document.addEventListener('mousemove', function (event) {
-    if (connecting) {return}
+    // if (connecting) {return} //TODO add this back lol
     event.preventDefault();
     if (isDown) {
       mousePosition = {

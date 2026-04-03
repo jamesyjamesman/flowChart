@@ -63,6 +63,8 @@ function add(placeAtCursor) {
     document.body.append(divElement);
 }
 
+// TODO I *THINK* these listeners get added every time, which probably isn't good.
+// Okay yeah it's definitely doing that
 function moveElement(divId) {
   let mousePosition;
   let offset = [0, 0];
@@ -76,7 +78,7 @@ function moveElement(divId) {
   divMove.addEventListener('mousedown', function (e) {
     // if (connecting) {return} //TODO add this back lol
     isDown = true;
-    document.body.setAttribute("style", "user-select: none;");
+    document.body.classList.add("noUserSelect");
     offset = {
       left: div.offsetLeft - e.clientX,
       top: div.offsetTop - e.clientY
@@ -85,8 +87,8 @@ function moveElement(divId) {
 
   divMove.addEventListener('mouseup', function () {
     isDown = false;
-    document.body.removeAttribute("style");
-    // changeBorders(div);
+    document.body.classList.remove("noUserSelect")
+    changeBorders(div);
   }, true);
 
   document.addEventListener('mousemove', function (event) {
@@ -109,18 +111,12 @@ function moveElement(divId) {
       } else {
         div.style.top = '0px';
       }
-      changeBorders(div);
     }
   }, true);
 }
 function changeBorders(div) {
-    let divObject = DraggableElement.getJSOFromDOM(div);
-
-    for (let i = 0; i < divObject.getFamily().length - 1; i++) { //todo this is not good
-      let oldId = divObject.lines[i];
-      document.getElementById(oldId).remove();
-      // divBox(div, divObject.siblings[i], false, oldId);
-    }
+    const divObject = DraggableElement.getJSOFromDOM(div);
+    divObject.updateLines();
 }
 
 function drawArrow(div, side) {

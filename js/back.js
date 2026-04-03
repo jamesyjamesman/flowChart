@@ -64,6 +64,17 @@ class DraggableElement {
         /// Remove lines from Map
     }
 
+    updateLines() {
+        this.children.forEach(child => this.changeLine(child));
+        this.parents.forEach(parent => parent.changeLine(this));
+    }
+
+    changeLine(child) {
+        DraggableElement.arrowMap.get(this, child).remove();
+        DraggableElement.arrowMap.remove(this, child);
+        this.drawLine(child);
+    }
+
     drawLine(child) {
         const div1 = this.html.getBoundingClientRect();
         const div2 = child.html.getBoundingClientRect();
@@ -141,6 +152,7 @@ class DraggableElement {
         return this.children.concat(this.parents);
     }
 
+    // This function is inherently evil but I will use it for now
     static getJSOFromDOM(htmlElement) {
         const idNum = parseInt(htmlElement.id.match(/\d+/));
         for (let i = 0; i < DraggableElement.elements.length; i++) {

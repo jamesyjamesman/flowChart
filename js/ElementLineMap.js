@@ -12,7 +12,7 @@ class ElementLineMap {
             throw new Error("Key already exists!");
         }
 
-        this.keys.push({key1, key2});
+        this.keys.push([key1, key2]);
         this.values.push(value);
     }
 
@@ -39,6 +39,7 @@ class ElementLineMap {
             if ((this.keys[i][0] === key1 && this.keys[i][1] === key2)) {
                 this.keys.splice(i, 1);
                 this.values.splice(i, 1);
+                return;
             }
         }
         throw new Error("Element not found!");

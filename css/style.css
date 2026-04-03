@@ -34,6 +34,10 @@ textarea {
   pointer-events: none
 }
 
+.noUserSelect {
+    user-select: none;
+}
+
 textarea {
   width: 140px;
   min-height: 40px;

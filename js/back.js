@@ -69,7 +69,7 @@ class DraggableElement {
         const div2 = child.html.getBoundingClientRect();
 
         const div1Center = [(div1.left + div1.right)/2, (div1.top + div1.bottom)/2];
-        const div2Center = [(div2.left + div2.right/2), (div2.top + div2.bottom)/2];
+        const div2Center = [(div2.left + div2.right)/2, (div2.top + div2.bottom)/2];
 
         // Rearrangement here
 

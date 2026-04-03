@@ -127,10 +127,14 @@ function connections() {
 
             const parentJSO = DraggableElement.getJSOFromDOM(div1);
             const childJSO = DraggableElement.getJSOFromDOM(div2);
-            parentJSO.addChild(childJSO);
-            parentJSO.drawLine(childJSO);
+            try {
+                parentJSO.addChild(childJSO);
+                parentJSO.drawLine(childJSO);
 
-            endConnections();
+                endConnections();
+            } catch (e) { // Maybe define or use more specific error in case something else happens
+                alert("Cannot link elements that are already linked!");
+            }
         }
     }
 

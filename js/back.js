@@ -108,13 +108,40 @@ class DraggableElement {
         }
     }
 
-    deleteElement() {
-        /// Remove object from static array
-        /// Remove html from page
-        /// Remove object from parent's children array
-        /// Remove any instances in arrays between parents and it and it and children
-        /// Remove lines from page
-        /// Remove lines from Map
+    // I wonder if there's a better way of doing this
+    delete() {
+
+        this.html.remove();
+
+        for (let i = 0; i < DraggableElement.elements.length; i++) {
+            if (DraggableElement.elements[i] === this) {
+                DraggableElement.elements.splice(i, 1);
+                break;
+            }
+            if (i === DraggableElement.elements.length - 1) {
+                throw new Error("Can't delete element that doesn't exist!");
+            }
+        }
+
+        for (let i = 0; i < this.parents.length; i++) {
+            for (let j = 0; j < this.parents[i].children.length; j++) {
+                if (this.parents[i].children[j] === this) {
+                    DraggableElement.arrowMap.remove(this.parents[i], this);
+                    this.parents[i].children.splice(j, 1);
+                    break;
+                }
+            }
+        }
+
+        for (let i = 0; i < this.children.length; i++) {
+            for (let j = 0; j < this.children[i].parents.length; j++) {
+                if (this.children[i].parents[j] === this) {
+                    DraggableElement.arrowMap.remove(this, this.children[i]);
+                    this.children[i].parents.splice(j, 1);
+                    break;
+                }
+            }
+        }
     }
 
     updateLines() {

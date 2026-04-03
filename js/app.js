@@ -9,32 +9,30 @@ document.addEventListener("mousemove", function(e) {
 });
 
 document.addEventListener("keydown", function(e) {
-    let hoveredElement = document.activeElement;
+    let activeElement = document.activeElement;
     // Input fields
-    if (hoveredElement.className === "header") {
+    if (activeElement.className === "header") {
       // Various choices to try to match the length of the input to length of the characters
-      if (hoveredElement.value.length === 0) {
-        hoveredElement.style.width = '28px';
+      if (activeElement.value.length === 0) {
+        activeElement.style.width = '28px';
       } else {
         if (e.key === "Backspace") {
-          hoveredElement.style.width = document.activeElement.value.length * 28 - 28 + 'px';
+          activeElement.style.width = document.activeElement.value.length * 28 - 28 + 'px';
         } else if (e.key.length !== 1) {
-          hoveredElement.style.width = document.activeElement.value.length * 28 + 'px'; //27 is slightly not enough, 28 is too much
+          activeElement.style.width = document.activeElement.value.length * 28 + 'px'; //27 is slightly not enough, 28 is too much
         } else {
-          hoveredElement.style.width = document.activeElement.value.length * 28 + 28 + 'px';
+          activeElement.style.width = document.activeElement.value.length * 28 + 28 + 'px';
         }
       }
     // Do nothing if it is a textarea
-  } else if (hoveredElement.nodeName === "TEXTAREA") {
+  } else if (activeElement.nodeName === "TEXTAREA") {
   } else if (e.key === "n") {
     add(true);
   } else if (e.key === "l" && !makingLine) {
     connections();
   } else if (e.key === "Backspace" || e.key === "Delete") {
-        while (hoveredElement.className !== "parentDiv" && hoveredElement.nodeName !== "BODY") {
-            hoveredElement = hoveredElement.parentElement;
-        }
-        if (hoveredElement.className === "parentDiv") {
+        const hoveredElement = findParentFromMouse();
+        if (hoveredElement !== null) {
             DraggableElement.getJSOFromDOM(hoveredElement).delete();
         }
     }

@@ -34,9 +34,11 @@ class ElementLineMap {
         return null;
     }
 
+    // Remove from data structure AND line from page (which isn't good practice maybe, but it is faster)
     remove(key1, key2) {
         for (let i = 0; i < this.keys.length; i++) {
             if ((this.keys[i][0] === key1 && this.keys[i][1] === key2)) {
+                this.values[i].remove(); // Side effect
                 this.keys.splice(i, 1);
                 this.values.splice(i, 1);
                 return;

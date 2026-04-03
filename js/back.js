@@ -33,12 +33,65 @@ class DraggableElement {
 
         const divMove = document.createElement("div");
         divMove.classList.add("move");
-        divMove.addEventListener("mouseover", () => {moveElement(divMoveNewId)}) // might need to just be divMoveNewId or whatever
         divMove.id = divMoveNewId;
         divMove.innerHTML += "::<br>::";
 
         div.append(divMove, title, document.createElement("br"), description);
+
+        this.applyMoveListeners(divMove);
+
         return div;
+    }
+
+    applyMoveListeners(divMove) {
+        let mousePosition;
+        let offset = [0, 0];
+        let isDown = false;
+
+        const div = divMove.parentElement;
+
+        divMove.addEventListener('mouseup', onDivRelease, true);
+        divMove.addEventListener('mousedown', (event) => onDivGrab(event), true);
+        document.addEventListener('mousemove', (event) => onDivMove(event), true);
+
+        function onDivGrab(event) {
+            // if (connecting) {return} //TODO add this back lol
+            isDown = true;
+            document.body.classList.add("noUserSelect");
+            offset = {
+                left: div.offsetLeft - event.clientX,
+                top: div.offsetTop - event.clientY
+            };
+        }
+
+        function onDivRelease() {
+            isDown = false;
+            document.body.classList.remove("noUserSelect");
+            changeBorders(div);
+        }
+
+        function onDivMove(event) {
+            // if (connecting) {return} //TODO add this back lol
+            event.preventDefault();
+            if (isDown) {
+                mousePosition = {
+                    x: event.clientX,
+                    y: event.clientY
+                };
+
+                if (mousePosition.x + offset.left > 0) {
+                    div.style.left = (mousePosition.x + offset.left) + 'px';
+                } else {
+                    div.style.left = '0px';
+                }
+
+                if (mousePosition.y + offset.top > 0) {
+                    div.style.top = (mousePosition.y + offset.top) + 'px';
+                } else {
+                    div.style.top = '0px';
+                }
+            }
+        }
     }
 
     addChild(draggableElement) {

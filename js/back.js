@@ -53,6 +53,7 @@ class DraggableElement {
         let isDown = false;
 
         div.addEventListener('mouseup', onDivRelease, true);
+        // Mouseup doesn't fire if the cursor leaves the page, or if it's in the rounded borders I think.
         divMove.addEventListener('mousedown', (event) => onDivGrab(event), true);
         document.addEventListener('mousemove', (event) => onDivMove(event), true);
 
@@ -156,15 +157,22 @@ class DraggableElement {
     }
 
     drawLine(child) {
+
+        const lineBox = document.createElement("div");
+        lineBox.classList.add("borderDiv");
+
+        DraggableElement.arrowMap.put(this, child, lineBox);
+
+        // If it's the first line, a key will not exist, obviously
+        // If it's the second line, it must be the other around, because an error would be thrown earlier.
+        const secondLine = DraggableElement.arrowMap.keyExists(child, this);
+
         const div1 = this.html.getBoundingClientRect();
         const div2 = child.html.getBoundingClientRect();
 
         // Average left, right, bottom, and top to get the center point
         const div1Center = [(div1.left + div1.right)/2, (div1.top + div1.bottom)/2];
         const div2Center = [(div2.left + div2.right)/2, (div2.top + div2.bottom)/2];
-
-        const lineBox = document.createElement("div");
-        lineBox.classList.add("borderDiv");
 
         if (div1Center[0] < div2Center[0] && div1Center[1] < div2Center[1]) { // 1 top left, 2 bottom right
             topLeftBottomRight(div1Center, div2Center);
@@ -179,13 +187,17 @@ class DraggableElement {
             topLeftBottomRight(div1Center, div2Center);
         }
 
-        DraggableElement.arrowMap.put(this, child, lineBox);
         document.body.append(lineBox);
         // Return
 
         function topLeftBottomRight(div1Center, div2Center) {
-            lineBox.classList.add("right");
-            lineBox.classList.add("top");
+            if (secondLine) {
+                lineBox.classList.add("left");
+                lineBox.classList.add("bottom");
+            } else {
+                lineBox.classList.add("right");
+                lineBox.classList.add("top");
+            }
 
             lineBox.style.width = div2Center[0] - div1Center[0] + "px";
             lineBox.style.height = div2Center[1] - div1Center[1] + "px";
@@ -195,8 +207,13 @@ class DraggableElement {
         }
 
         function bottomLeftTopRight(div1Center, div2Center) {
-            lineBox.classList.add("left");
-            lineBox.classList.add("top");
+            if (secondLine) {
+                lineBox.classList.add("right");
+                lineBox.classList.add("bottom");
+            } else {
+                lineBox.classList.add("left");
+                lineBox.classList.add("top");
+            }
 
             lineBox.style.width = div1Center[0] - div2Center[0] + "px";
             lineBox.style.height = div2Center[1] - div1Center[1] + "px";

@@ -6,7 +6,6 @@ class DraggableElement {
         this.id = DraggableElement.elements.length === 0 ? 1 : DraggableElement.elements[DraggableElement.elements.length-1].id + 1;
         this.children = [];
         this.parents = [];
-        this.lines = [];
         this.html = this.createHTML();
         DraggableElement.elements.push(this);
     }
@@ -30,6 +29,11 @@ class DraggableElement {
         const description = document.createElement("textarea");
         description.placeholder = "Description";
         description.id = descriptionNewId;
+        description.value =
+        `Hit the "N" key to make a new element at your mouse position. ` +
+        `Hit the "L" key to connect two elements, and "Escape" to cancel. ` +
+        `Hit "Delete" or "Backspace" to delete the element you're hovering over. ` +
+        `Poke around and have fun!`;
 
         const divMove = document.createElement("div");
         divMove.classList.add("move");
@@ -55,7 +59,6 @@ class DraggableElement {
         document.addEventListener('mousemove', (event) => onDivMove(event), true);
 
         function onDivGrab(event) {
-            // if (connecting) {return} //TODO add this back lol
             isDown = true;
             document.body.classList.add("noUserSelect");
             offset = {
@@ -70,7 +73,6 @@ class DraggableElement {
         }
 
         function onDivMove(event) {
-            // if (connecting) {return} //TODO add this back lol
             event.preventDefault();
             if (isDown) {
                 mousePosition = {

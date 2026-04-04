@@ -30,6 +30,14 @@ textarea {
   margin-bottom: 10px;
 }
 
+.disabled {
+  pointer-events: none
+}
+
+.noUserSelect {
+    user-select: none;
+}
+
 textarea {
   width: 140px;
   min-height: 40px;
@@ -92,7 +100,11 @@ div.borderDiv {
   border: 0;
   position: absolute;
   z-index: -100;
-  border-radius: 0;
+  border-radius: 10px;
+}
+
+div.borderDiv.fullBorder {
+    border: dashed white 4px;
 }
 
 div.borderDiv.right {
@@ -107,14 +119,32 @@ div.borderDiv.top {
   border-top: dashed white 4px;
 }
 
-div.borderDiv.right.top {
-  border-radius: 0 10px 0 0;
+div.borderDiv.bottom {
+    border-bottom: dashed white 4px;
 }
 
-div.borderDiv.left.top {
-  border-radius: 10px 0 0 0;
+div.arrow {
+  height: 0;
+  width: 0;
+  padding: 0;
+  background-color: transparent;
+  border-radius: 0;
 }
-button.connector {
-  background-color: white;
-  padding-left: 50px;
+div.arrowTop {
+  border-left: 10px solid transparent;
+  border-top: 20px solid white;
+  border-right: 10px solid transparent;
+  border-bottom: 20px solid transparent;
+}
+
+div.arrowLeft {
+  border-left: 5px solid white;
+}
+
+div.arrowRight {
+  border-right: 5px solid white;
+}
+
+div.arrowBottom {
+  border-bottom: 5px solid white;
 }

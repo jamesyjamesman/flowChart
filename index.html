@@ -1,41 +1,26 @@
-<!doctype html>
-<html class="no-js" lang="">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Flowchart</title>
   <link rel="stylesheet" href="./css/style.css">
-  <meta name="description" content="">
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-          integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-  <meta property="og:title" content="">
-  <meta property="og:type" content="">
-  <meta property="og:url" content="">
-  <meta property="og:image" content="">
-  <meta property="og:image:alt" content="">
-
-  <!--These are just star icons.-->
-  <link rel="icon" href="./favicon.ico" sizes="any">
-  <link rel="icon" href="./icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="./icon.png">
-
-<!--  <link rel="manifest" href="./site.webmanifest">-->
-  <meta name="theme-color" content="#fafafa">
 </head>
 
 <body>
-<div id="div1" class="parentDiv">
-   <div class="move" onmouseover="moveElement(id)" id="divMove1">::<br>::</div>
-  <label for="header1"></label>
-  <input value="Flowchart Tool!" class="header" type="text" id="header1" style="width: 440px">
-  <br>
-  <label for="button1"></label>
-  <textarea id="button1" style="width: 440px; height: 66px">Hit the "N" key to make a new element at your mouse position. Hit the "L" key to connect two elements. Hit "Escape" or "Backspace" to delete the element you're hovering over.</textarea>
-</div>
+<!--<div id="div1" class="parentDiv">-->
+<!--   <div class="move" onmouseover="moveElement(id)" id="divMove1">::<br>::</div>-->
+<!--  <label for="header1"></label>-->
+<!--  <input value="Flowchart Tool!" class="header" type="text" id="header1" style="width: 440px">-->
+<!--  <br>-->
+<!--  <label for="button1"></label>-->
+<!--  <textarea id="button1" style="width: 440px; height: 66px">Hit the "N" key to make a new element at your mouse position. Hit the "L" key to connect two elements, and "Escape" to cancel. Hit "Delete" or "Backspace" to delete the element you're hovering over.</textarea>-->
+<!--</div>-->
 <div id="div_add">
   <button id="add" type="button" onclick="add(false)">+</button>
 </div>
 <button type="button" onclick="connections()">Click here to draw a line!</button>
+<script src="./js/ElementLineMap.js"></script>
+<script src="./js/back.js"></script>
 <script src="./js/app.js"></script>
 </body>
 </html>

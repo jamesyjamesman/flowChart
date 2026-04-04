@@ -42,19 +42,17 @@ class DraggableElement {
 
         div.append(divMove, title, document.createElement("br"), description);
 
-        this.applyMoveListeners(divMove);
+        this.applyEventListeners(div, divMove);
 
         return div;
     }
 
-    applyMoveListeners(divMove) {
+    applyEventListeners(div, divMove) {
         let mousePosition;
         let offset = [0, 0];
         let isDown = false;
 
-        const div = divMove.parentElement;
-
-        divMove.addEventListener('mouseup', onDivRelease, true);
+        div.addEventListener('mouseup', onDivRelease, true);
         divMove.addEventListener('mousedown', (event) => onDivGrab(event), true);
         document.addEventListener('mousemove', (event) => onDivMove(event), true);
 

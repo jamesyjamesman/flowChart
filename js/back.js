@@ -90,8 +90,8 @@ class DraggableElement {
                 } else {
                     div.style.top = '0px';
                 }
+                changeBorders(div);
             }
-            changeBorders(div);
         }
     }
 
@@ -165,7 +165,10 @@ class DraggableElement {
 
         // If it's the first line, a key will not exist, obviously
         // If it's the second line, it must be the other around, because an error would be thrown earlier.
-        const secondLine = DraggableElement.arrowMap.keyExists(child, this);
+        // Okay this is janky but it's the second line if it's not the first line, and the first line always has the top class.
+        const secondLine =
+            DraggableElement.arrowMap.keyExists(child, this) &&
+            DraggableElement.arrowMap.get(child, this).classList.contains("top");
 
         const div1 = this.html.getBoundingClientRect();
         const div2 = child.html.getBoundingClientRect();

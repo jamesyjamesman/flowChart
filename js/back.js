@@ -67,7 +67,6 @@ class DraggableElement {
         function onDivRelease() {
             isDown = false;
             document.body.classList.remove("noUserSelect");
-            changeBorders(div);
         }
 
         function onDivMove(event) {
@@ -91,6 +90,7 @@ class DraggableElement {
                     div.style.top = '0px';
                 }
             }
+            changeBorders(div);
         }
     }
 
@@ -159,73 +159,51 @@ class DraggableElement {
         const div1 = this.html.getBoundingClientRect();
         const div2 = child.html.getBoundingClientRect();
 
+        // Average left, right, bottom, and top to get the center point
         const div1Center = [(div1.left + div1.right)/2, (div1.top + div1.bottom)/2];
         const div2Center = [(div2.left + div2.right)/2, (div2.top + div2.bottom)/2];
 
-        // Rearrangement here
-
         const lineBox = document.createElement("div");
-        lineBox.classList.add("fullBorder");
         lineBox.classList.add("borderDiv");
-        lineBox.style.width = Math.abs(div1Center[0] - div2Center[0]) + "px";
-        lineBox.style.height = Math.abs(div1Center[1] - div2Center[1]) + "px";
 
-        lineBox.style.left = div1Center[0] + "px";
-        lineBox.style.top = div1Center[1] + "px";
+        if (div1Center[0] < div2Center[0] && div1Center[1] < div2Center[1]) { // 1 top left, 2 bottom right
+            topLeftBottomRight(div1Center, div2Center);
+        } else if (div1Center[0] > div2Center[0] && div1Center[1] < div2Center[1]) { // 1 top right, 2 bottom left
+            bottomLeftTopRight(div1Center, div2Center);
+        } else if (div1Center[0] > div2Center[0] && div1Center[1] > div2Center[1]) { // 1 bottom right, 2 top left
+            topLeftBottomRight(div2Center, div1Center);
+        } else if (div1Center[0] < div2Center[0] && div1Center[1] > div2Center[1]) { // 1 bottom left, 2 top right
+            bottomLeftTopRight(div2Center, div1Center);
+        } else {
+            console.log("We couldn't decide how to orient your line!");
+            topLeftBottomRight(div1Center, div2Center);
+        }
 
         DraggableElement.arrowMap.put(this, child, lineBox);
         document.body.append(lineBox);
+        // Return
 
-        // let styleLeft = false;
-        // let leftOnly = false;
-        // let topOnly = false;
-        //
-        // if (newDivCoords[0][0] < div2.right && newDivCoords[0][0] > div2.left) {
-        //     leftOnly = true;
-        //     left = (2*left + width) / 2;
-        //     width = 1;
-        // }
-        //
-        // if (newDivCoords[0][1] > div2.top && newDivCoords[0][1] < div2.bottom) {
-        //     topOnly = true;
-        //     top = (2*top + height) / 2;
-        //     height = 1;
-        // }
-        //
-        // //If statements effectively rearrange based on which div is topmost and leftmost (cannot have negative widths or lengths)
-        // if (width < 0) {
-        //     left += width;
-        //     width = Math.abs(width)
-        //     styleLeft = true;
-        // }
-        // if (height < 0) {
-        //     top += height;
-        //     height = Math.abs(height);
-        // }
-        // let newId;
-        // if (newBox) {
-        //     let arrayLength = boxIds.length - 1;
-        //     let idNum = boxIds[arrayLength] + 1;
-        //     boxIds.push(idNum);
-        //     newId = "box" + idNum;
-        // } else {
-        //     newId = oldId;
-        // }
-        //
-        // if (topOnly) {
-        //     newDiv.addClass("top");
-        // }
-        // else if (leftOnly) {
-        //     newDiv.addClass("left")
-        // }
-        // else if (styleLeft) {
-        //     newDiv.addClass("left");
-        //     newDiv.addClass("top");
-        // } else {
-        //     newDiv.addClass("right");
-        //     newDiv.addClass("top");
-        // }
-        // $("body").append(newDiv);
+        function topLeftBottomRight(div1Center, div2Center) {
+            lineBox.classList.add("right");
+            lineBox.classList.add("top");
+
+            lineBox.style.width = div2Center[0] - div1Center[0] + "px";
+            lineBox.style.height = div2Center[1] - div1Center[1] + "px";
+
+            lineBox.style.left = div1Center[0] + "px";
+            lineBox.style.top = div1Center[1] + "px";
+        }
+
+        function bottomLeftTopRight(div1Center, div2Center) {
+            lineBox.classList.add("left");
+            lineBox.classList.add("top");
+
+            lineBox.style.width = div1Center[0] - div2Center[0] + "px";
+            lineBox.style.height = div2Center[1] - div1Center[1] + "px";
+
+            lineBox.style.left = div2Center[0] + "px";
+            lineBox.style.top = div1Center[1] + "px";
+        }
     }
 
     getFamily() {

@@ -100,7 +100,7 @@ div.borderDiv {
   border: 0;
   position: absolute;
   z-index: -100;
-  border-radius: 0;
+  border-radius: 10px;
 }
 
 div.borderDiv.fullBorder {
@@ -119,12 +119,8 @@ div.borderDiv.top {
   border-top: dashed white 4px;
 }
 
-div.borderDiv.right.top {
-  border-radius: 0 10px 0 0;
-}
-
-div.borderDiv.left.top {
-  border-radius: 10px 0 0 0;
+div.borderDiv.bottom {
+    border-bottom: dashed white 4px;
 }
 
 div.arrow {

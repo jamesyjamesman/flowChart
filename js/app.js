@@ -119,11 +119,16 @@ function connections() {
             const childJSO = DraggableElement.getJSOFromDOM(div2);
             try {
                 parentJSO.addChild(childJSO);
-                parentJSO.drawLine(childJSO);
+                new ElementArrow(parentJSO, childJSO);
+                // Puts itself into the map
 
                 endConnections();
-            } catch (e) { // Maybe define or use more specific error in case something else happens
-                alert("Cannot link elements that are already linked!");
+            } catch (e) {
+                if (e instanceof MapContainsKeyError) {
+                    alert("Cannot link elements that are already linked!");
+                } else {
+                    throw e;
+                }
             }
         }
     }

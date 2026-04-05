@@ -9,7 +9,7 @@ class ElementLineMap {
     // ORDERED!
     put(key1, key2, value) {
         if (this.keyExists(key1, key2)) {
-            throw new Error("Key already exists!");
+            throw new MapContainsKeyError();
         }
 
         this.keys.push([key1, key2]);
@@ -38,7 +38,7 @@ class ElementLineMap {
     remove(key1, key2) {
         for (let i = 0; i < this.keys.length; i++) {
             if ((this.keys[i][0] === key1 && this.keys[i][1] === key2)) {
-                this.values[i].remove(); // Side effect
+                this.values[i].delete(); // Side effect
                 this.keys.splice(i, 1);
                 this.values.splice(i, 1);
                 return;

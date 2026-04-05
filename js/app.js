@@ -9,34 +9,24 @@ document.addEventListener("mousemove", function(e) {
 });
 
 document.addEventListener("keydown", function(e) {
-    let activeElement = document.activeElement;
-    // Input fields
-    if (activeElement.className === "header") {
-      // Various choices to try to match the length of the input to length of the characters
-      if (activeElement.value.length === 0) {
-        activeElement.style.width = '28px';
-      } else {
-        if (e.key === "Backspace") {
-          activeElement.style.width = document.activeElement.value.length * 28 - 28 + 'px';
-        } else if (e.key.length !== 1) {
-          activeElement.style.width = document.activeElement.value.length * 28 + 'px'; //27 is slightly not enough, 28 is too much
-        } else {
-          activeElement.style.width = document.activeElement.value.length * 28 + 28 + 'px';
-        }
-      }
-    // Do nothing if it is a textarea
-  } else if (activeElement.nodeName === "TEXTAREA") {
-  } else if (e.key === "n") {
-    add(true);
-  } else if (e.key === "l" && !makingLine) {
-    connections();
-  } else if (e.key === "Backspace" || e.key === "Delete") {
+    if (isTyping()) return;
+
+    if (e.key === "Backspace" || e.key === "Delete") {
         const hoveredElement = findParentFromMouse();
         if (hoveredElement !== null) {
             DraggableElement.getJSOFromDOM(hoveredElement).delete();
         }
+    } else if (e.key === "n") {
+        add(true);
+    } else if (e.key === "l" && !makingLine) {
+        connections();
     }
-})
+});
+
+function isTyping() {
+    const activeElementName = document.activeElement.nodeName;
+    return activeElementName === "TEXTAREA" || activeElementName === "INPUT";
+}
 
 function findParentFromMouse() { // Can only return a div with class "parentDiv"
   let element = document.elementFromPoint(mouseX, mouseY);
